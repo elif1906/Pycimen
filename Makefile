@@ -28,4 +28,3 @@ test:
 # Clean rule
 clean:
 	@rm -f $(OUTPUT)
-
