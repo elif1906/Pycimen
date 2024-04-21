@@ -1,9 +1,9 @@
 <div>
-  <img src="picture.jpeg" alt="Python Logo" align="left" width="200" height="200">
+  <img src="picture.jpeg" alt="Python Logo" align="left" width="100" height="100">
   <h1>PyCimen Language</h1>
 </div>
 
-A lightweight Python interpreter implemented in C++ offers developers a versatile and extensible tool for executing Python code. This approach fosters deeper understanding of the language's inner workings and encourages contributions to the open-source Python ecosystem.
+Python interpreter implemented in C++ offers developers a versatile and extensible tool for executing Python code. This approach fosters deeper understanding of the language's inner workings and encourages contributions to the open-source Python ecosystem.
 
 ## Project Overview
 
