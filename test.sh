@@ -21,7 +21,7 @@ for testfolder in tests/test_*; do
   expectedfile="${testfolder}/expected.txt"
   
   # Run the test and capture the output
-  output=$(./main "$inputfile")
+  output=$(./pycimen "$inputfile")
   
   # Compare the output to the expected output
   expected=$(cat "$expectedfile")

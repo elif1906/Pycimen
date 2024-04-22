@@ -2,7 +2,7 @@
 SRCS := $(shell find . -name "*.cpp")
 
 # Set the output file name
-OUTPUT :=  main
+OUTPUT :=  pycimen
 
 # Set the compiler and compiler flags
 CC := g++
