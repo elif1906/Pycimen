@@ -44,9 +44,16 @@ $ make
 ```
 
 ## File Running
+# for window users
 ```bash
-
 $ pycimen [filename.pcl]  
 $ pycimen --version
+
+```
+# for linux/macos users
+```bash
+$ ./pycimen [filename.pcl]  
+$ ./pycimen --version
+
 ```
 
