@@ -5,6 +5,7 @@
 #include "../libs/parser/parser.hpp"
 #include "../libs/ast/ast.hpp"
 #include "../libs/interpreter/interpreter.hpp"
+#include <string.h>
 
 #pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma")
@@ -26,6 +27,11 @@ int main(int argc, char* argv[]) {
     if (argc != 2) {
         cerr << "Usage: " << argv[0] << " [filename].py\n";
         return 1;
+    }
+
+    if (strcmp(argv[1], "--version") == 0) {
+        cout << "version: 1.0.0" << std::endl;
+        return 0;
     }
 
     const char* const filename = argv[1];
