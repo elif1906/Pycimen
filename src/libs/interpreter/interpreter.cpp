@@ -6,6 +6,7 @@
 #include "../exceptions/runtime_exceptions.hpp" // break, continue, return
 #include "../value/primitives.hpp"
 #include "../builtin/builtins.hpp"
+#include <sstream>
 
 void todo() {
     throw std::runtime_error("Feature not implemented yet");
