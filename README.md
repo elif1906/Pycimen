@@ -35,10 +35,18 @@ The Python Interpreter project aims to develop a fully functional interpreter fo
 $ git clone https://github.com/elif1906/Pycimen
 $ cd pycimen
 $ make
-```
 
+```
 ## Running Tests
 
 ```bash
   $ make test
 ```
+
+## File Running
+```bash
+
+$ pycimen [filename.pcl]  
+$ pycimen --version
+```
+
