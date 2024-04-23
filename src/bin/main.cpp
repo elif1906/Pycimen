@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     cout.tie(nullptr);
 
     if (argc != 2) {
-        cerr << "Usage: " << argv[0] << " [filename].py\n";
+        cerr << "Usage: " << argv[0] << " [filename].pcl\n";
         return 1;
     }
 
