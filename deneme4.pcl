@@ -1,0 +1,6 @@
+print("Lütfen isminizi girin: ")
+isim = input()
+print("Merhaba " + isim)
+
+
+ q

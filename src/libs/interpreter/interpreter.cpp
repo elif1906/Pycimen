@@ -7,7 +7,10 @@
 #include "../value/primitives.hpp"
 #include "../builtin/builtins.hpp"
 #include <sstream>
-
+#ifndef Py_PYTHON_H
+#define Py_PYTHON_H
+#endif
+#include <Python.h>
 void todo() {
     throw std::runtime_error("Feature not implemented yet");
 }

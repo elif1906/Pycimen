@@ -1,5 +1,9 @@
 #include "./pyInstance.hpp"
 #include "./pyClass.hpp"
+#ifndef Py_PYTHON_H
+#define Py_PYTHON_H
+#endif
+#include <Python.h>
 
 PyInstance::PyInstance(PyClass* klass)
  : PyObject(ObjectType::Instance), base(klass){

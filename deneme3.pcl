@@ -1,0 +1,10 @@
+
+x = 10  # 1010 (binary)
+y = 7   # 0111 (binary)
+
+print(x & y)    # Output: 2 (0010 binary)
+print(x | y)    # Output: 15 (1111 binary)
+print(x ^ y)    # Output: 13 (1101 binary)
+print(~x)       # Output: -11 (.... 0101 binary, tilde operatörü Python'dakinden farklı)
+print(x << 2)   # Output: 40 (x'i 2 bit sola kaydır)
+print(x >> 2)   # Output: 2 (x'i 2 bit sağa kaydır)

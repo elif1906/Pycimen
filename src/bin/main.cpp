@@ -6,6 +6,10 @@
 #include "../libs/ast/ast.hpp"
 #include "../libs/interpreter/interpreter.hpp"
 #include <string.h>
+#ifndef Py_PYTHON_H
+#define Py_PYTHON_H
+#endif
+#include <Python.h>
 
 #pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma")
@@ -25,7 +29,7 @@ int main(int argc, char* argv[]) {
     cout.tie(nullptr);
 
     if (argc != 2) {
-        cerr << "Usage: " << argv[0] << " [filename].py\n";
+        cerr << "Usage: " << argv[0] << " [filename].pcl\n";
         return 1;
     }
 

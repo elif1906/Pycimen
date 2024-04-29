@@ -1,3 +1,9 @@
+#ifndef Py_PYTHON_H
+#define Py_PYTHON_H
+#endif
+#include <Python.h>
+
+
 #include "gc.hpp"
 #include <algorithm>
 

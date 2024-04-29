@@ -1,6 +1,10 @@
 #include "./pyFloat.hpp"
 #include "./pyInt.hpp"
 #include "./pyBool.hpp"
+#ifndef Py_PYTHON_H
+#define Py_PYTHON_H
+#endif
+#include <Python.h>
 
 PyFloat::PyFloat(const std::string& v) 
     : PyObject(ObjectType::Float, new llf(std::stold(v))) {}

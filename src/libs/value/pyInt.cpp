@@ -1,6 +1,10 @@
 #include "./pyInt.hpp"
 #include "./pyFloat.hpp"
 #include "./pyBool.hpp"
+#ifndef Py_PYTHON_H
+#define Py_PYTHON_H
+#endif
+#include <Python.h>
 
 PyInt::PyInt(const std::string& v)
     : PyObject(ObjectType::Int, new ll(std::stoll(v))) {}
