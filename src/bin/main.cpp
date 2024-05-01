@@ -9,7 +9,6 @@
 #include "../libs/interpreter/interpreter.hpp"
 #include <string.h>
 
-
 #pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma")
 
@@ -67,61 +66,77 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    import_array();
+      
 
     Py_Initialize();
 
-    auto numpy_module = PyImport_ImportModule("numpy");
+    PyObject* numpy_module = PyImport_ImportModule("numpy");
+    if (!numpy_module) {
+        PyErr_Print();
+        Py_Finalize();
+        return EXIT_FAILURE;
+    }
 
-    import_array();  // Must be present for NumPy C API to work
+    import_array();  
 
     int nd = 2;
-    npy_intp dims[2] = {100, 100};
+    npy_intp dims[2] = {6, 1};
     int type_code = NPY_INT;
 
     PyObject* py_array = PyArray_SimpleNew(nd, dims, type_code);
-
-    if(!py_array) {
+    if (!py_array) {
         PyErr_Print();
+        Py_DECREF(numpy_module);
+        Py_Finalize();
+        return EXIT_FAILURE;
     }
 
-
     int* data = (int*)PyArray_DATA(py_array);
-
-    if(!data) {
+    if (!data) {
         PyErr_Print();
+        Py_DECREF(py_array);
+        Py_DECREF(numpy_module);
+        Py_Finalize();
+        return EXIT_FAILURE;
     }
 
     npy_intp dims_res = *PyArray_DIMS(py_array);
-
-    cout << "dims: " << dims_res << endl;     
+    cout << "dims: " << dims_res << endl;
 
     // Set array values
     data[0] = 1;
     data[1] = 2;
     // ...
 
-    
+    PyObject* mean_func = PyObject_GetAttrString(numpy_module, "mean");
+    if (!mean_func || !PyCallable_Check(mean_func)) {
+        PyErr_Print();
+        Py_DECREF(py_array);
+        Py_DECREF(numpy_module);
+        Py_Finalize();
+        return EXIT_FAILURE;
+    }
 
-    // auto mean_func = PyObject_GetAttrString(numpy_module, "mean");
+    PyObject* arrayRes = PyObject_CallFunction(mean_func, "O", py_array);
+    if (!arrayRes) {
+        PyErr_Print();
+        Py_DECREF(py_array);
+        Py_DECREF(numpy_module);
+        Py_DECREF(mean_func);
+        Py_Finalize();
+        return EXIT_FAILURE;
+    }
 
-    // if(!mean_func || !PyCallable_Check(mean_func)) {
-    //     PyErr_Print();
-    // }
-
-    // auto arrayRes = PyObject_CallFunction(mean_func, "(0)", py_array);
-
-    // if(!arrayRes) {
-    //     PyErr_Print();
-    // }
-
-    // cout << arrayRes << endl;
+    double mean_value = PyFloat_AsDouble(arrayRes);
+    cout << "Mean value: " << mean_value << endl;
 
     // Clean up
+    Py_DECREF(arrayRes);
+    Py_DECREF(mean_func);
     Py_DECREF(py_array);
+    Py_DECREF(numpy_module);
 
     Py_Finalize();
 
     return 0;
 }
-
