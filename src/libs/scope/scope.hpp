@@ -1,27 +1,34 @@
 #pragma once
 
+#include <string>
 #include <unordered_map>
-#include "../value/pyObject.hpp"
+#include <stdexcept>
 
-class Scope {
-
+class PyCimenScope {
 public:
-    
-    Scope(Scope* enclosing = nullptr) : enclosing(enclosing){}
-    
-    ~Scope() {
+    PyCimenScope(PyCimenScope* enclosing = nullptr) : enclosing(enclosing) {}
+
+    ~PyCimenScope() {
         for (auto& [key, value] : values) {
-            value->decRefCount();
+            if (value!= nullptr) {
+                value->decRefCount();
+            }
         }
     }
-    
-    void define(const std::string& name, PyObject* value) {
-          
+
+    void define(const std::string& name, PyCimenObject* value) {
+        if (name.empty()) {
+            throw std::runtime_error("Variable name cannot be empty");
+        }
+        if (value == nullptr) {
+            throw std::runtime_error("Value cannot be nullptr");
+        }
         auto it = values.find(name);
-    
-        if (it != values.end()) {
-            PyObject* temp = it->second;
-            temp->decRefCount();
+        if (it!= values.end()) {
+            PyCimenObject* temp = it->second;
+            if (temp!= nullptr) {
+                temp->decRefCount();
+            }
             it->second = value;
             value->incRefCount();
         } else {
@@ -30,27 +37,25 @@ public:
         }
     }
 
-    PyObject* get(const std::string& name) {
-        
+    PyCimenObject* get(const std::string& name) {
+        if (name.empty()) {
+            throw std::runtime_error("Variable name cannot be empty");
+        }
         auto it = values.find(name);
-        
-        if(it != values.end()) {
+        if(it!= values.end()) {
             return it->second;
-        
-        } else if(enclosing) {
+        } else if (enclosing) {
             return enclosing->get(name);
-        
         } else {
             throw std::runtime_error("Undeclared variable '" + name + "'.");
         }
     }
-    
-    Scope* getEnclosing() {
-        return this->enclosing;
+
+    PyCimenScope* getEnclosing() {
+        return enclosing;
     }
 
 private:
-    std::unordered_map<std::string, PyObject*> values;
-    Scope* enclosing;
+    std::unordered_map<std::string, PyCimenObject*> values;
+    PyCimenScope* enclosing;
 };
-

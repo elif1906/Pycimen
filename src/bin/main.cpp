@@ -1,3 +1,5 @@
+#include <Python.h>
+#include <numpy/arrayobject.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -6,10 +8,7 @@
 #include "../libs/ast/ast.hpp"
 #include "../libs/interpreter/interpreter.hpp"
 #include <string.h>
-#ifndef Py_PYTHON_H
-#define Py_PYTHON_H
-#endif
-#include <Python.h>
+
 
 #pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma")
@@ -67,6 +66,61 @@ int main(int argc, char* argv[]) {
         cerr << err.what() << '\n';
         return EXIT_FAILURE;
     }
+
+    import_array();
+
+    Py_Initialize();
+
+    auto numpy_module = PyImport_ImportModule("numpy");
+
+    import_array();  // Must be present for NumPy C API to work
+
+    int nd = 2;
+    npy_intp dims[2] = {100, 100};
+    int type_code = NPY_INT;
+
+    PyObject* py_array = PyArray_SimpleNew(nd, dims, type_code);
+
+    if(!py_array) {
+        PyErr_Print();
+    }
+
+
+    int* data = (int*)PyArray_DATA(py_array);
+
+    if(!data) {
+        PyErr_Print();
+    }
+
+    npy_intp dims_res = *PyArray_DIMS(py_array);
+
+    cout << "dims: " << dims_res << endl;     
+
+    // Set array values
+    data[0] = 1;
+    data[1] = 2;
+    // ...
+
+    
+
+    // auto mean_func = PyObject_GetAttrString(numpy_module, "mean");
+
+    // if(!mean_func || !PyCallable_Check(mean_func)) {
+    //     PyErr_Print();
+    // }
+
+    // auto arrayRes = PyObject_CallFunction(mean_func, "(0)", py_array);
+
+    // if(!arrayRes) {
+    //     PyErr_Print();
+    // }
+
+    // cout << arrayRes << endl;
+
+    // Clean up
+    Py_DECREF(py_array);
+
+    Py_Finalize();
 
     return 0;
 }

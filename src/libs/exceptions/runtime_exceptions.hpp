@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../value/pyObject.hpp"
+#include "../value/PyCimenObject.hpp"
 
 class ReturnException : public std::exception {
 public:
-    ReturnException(PyObject* value) : value(value) {}
-    PyObject* value;
+    ReturnException(PyCimenObject* value) : value(value) {}
+    PyCimenObject* value;
 };
 
 class BreakException : public std::exception {

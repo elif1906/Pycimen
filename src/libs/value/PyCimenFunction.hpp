@@ -1,31 +1,30 @@
 #pragma once
 
-#include "./pyCallable.hpp"
-#include "../scope/scope.hpp"
+#include "./PyCimenCallable.hpp"
 #include "../exceptions/runtime_exceptions.hpp"
-#include "./pyNone.hpp"
+#include "./PyCimenNone.hpp"
 
-class PyFunction : public PyCallable {
+class PyCimenFunction : public PyCimenCallable {
 public:
-    explicit PyFunction(
+    explicit PyCimenFunction(
                 FunctionNode* declaration, 
-                Scope* closure, 
-                PyInstance* bound = nullptr
-    ) : PyCallable(ObjectType::Func, closure), 
+                class PyCimenScope* closure, 
+                PyCimenInstance* bound = nullptr
+    ) : PyCimenCallable(ObjectType::Func, closure), 
         declaration(declaration), 
         bound(bound) {}
     
     inline bool isFunc() const override { return true; }
     inline bool isTruthy() const override { return true; }
     
-    PyFunction* bind(PyInstance* instance) {
-        return new PyFunction(this->declaration, this->getContext(), instance);
+    PyCimenFunction* bind(PyCimenInstance* instance) {
+        return new PyCimenFunction(this->declaration, this->getContext(), instance);
     }
     
-    PyObject* call(Interpreter* interpreter, const std::vector<PyObject*>& args) override {
+    PyCimenObject* call(Interpreter* interpreter, const std::vector<PyCimenObject*>& args) override {
         
-        Scope* closure = this->getContext();
-        Scope* fnCallEnv = new Scope(closure);
+        closure = this->getContext();
+        fnCallEnv = new class PyCimenScope(closure);
         interpreter->pushContext(fnCallEnv);
         
         const std::vector<AstNode*>& params = this->declaration->getParams();
@@ -54,7 +53,7 @@ public:
             }
         }
         
-        PyObject* retVal = new PyNone();
+        PyCimenObject* retVal = new PyCimenNone();
         try {
             // Visit the body of the function, switching back to the interpreter's context
             declaration->getBody()->accept(interpreter);
@@ -77,7 +76,10 @@ public:
     
 private:
     FunctionNode* declaration = nullptr;
-    PyInstance* bound = nullptr;
+    PyCimenInstance* bound = nullptr;
+
+    class PyCimenScope* closure;
+    class PyCimenScope* fnCallEnv;
     
     void deleteData() override {
         delete declaration;

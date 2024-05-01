@@ -1,31 +1,31 @@
 #pragma once
 
-#include "./pyObject.hpp"
+#include "./PyCimenObject.hpp"
 
-class PyList : public PyObject {
+class PyCimenList : public PyCimenObject {
 public:
-    explicit PyList(const std::vector<PyObject*>& v)
-        : PyObject(ObjectType::List, new std::vector<PyObject*>(v)) {}
+    explicit PyCimenList(const std::vector<PyCimenObject*>& v)
+        : PyCimenObject(ObjectType::List, new std::vector<PyCimenObject*>(v)) {}
 
     inline bool isList() const override { return true; }
     inline bool isTruthy() const override { return getList().size() != 0; }
 
-    const std::vector<PyObject*>& getList() const {
+    const std::vector<PyCimenObject*>& getList() const {
         return *getListData();
     }
 
-    const PyObject* operator[](size_t index) const {
+    const PyCimenObject* operator[](size_t index) const {
         const auto& listData = getList();
         if (index < listData.size()) {
             return listData[index];
         }
-        throw std::out_of_range("Index out of range in PyList");
+        throw std::out_of_range("Index out of range in PyCimenList");
     }
 
     std::size_t size() const {
         return getList().size();
     }
-    void append(PyObject* item) {
+    void append(PyCimenObject* item) {
         getListData()->push_back(item);
     }
     void remove(std::size_t index) {
@@ -46,8 +46,8 @@ public:
     }
     
 private:
-    std::vector<PyObject*>* getListData() const {
-        return static_cast<std::vector<PyObject*>*>(data);
+    std::vector<PyCimenObject*>* getListData() const {
+        return static_cast<std::vector<PyCimenObject*>*>(data);
     }
     void deleteData() override {
         delete getListData();

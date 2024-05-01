@@ -5,12 +5,11 @@
 #include <vector>
 #include <memory>
 #include "../token/token.hpp"
-#include "../value/pyInstance.hpp"
+#include "../value/PyCimenInstance.hpp"
 
 using llf = long double;
 using lld = long long int;
 
-class PyObject;
 class NodeVisitor;
 
 // Define the AST node types
@@ -50,7 +49,7 @@ public:
     bool is_block() { return type == AstNodeType::Block; }
     bool is_function() { return type == AstNodeType::Function; }
 
-    virtual PyObject* accept(NodeVisitor* visitor) = 0;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) = 0;
 
     AstNodeType type;
 };
@@ -65,7 +64,7 @@ public:
 
     AstNode* args;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -78,7 +77,7 @@ public:
       
     std::vector<AstNode*> statements;
     
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -91,7 +90,7 @@ public:
     
     BlockNode* body;
     
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -105,7 +104,7 @@ public:
 
     AstNode *cond, *left, *right;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -120,7 +119,7 @@ public:
     Token op;
     AstNode *left, *right;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -135,7 +134,7 @@ public:
     Token op;
     AstNode* right;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -150,7 +149,7 @@ public:
     
     const std::string& getLexeme() { return value.lexeme; }
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -165,7 +164,7 @@ public:
     
     const std::string& getLexeme() { return value.lexeme; }
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -180,7 +179,7 @@ public:
     
     const std::string& getLexeme() { return value.lexeme; }
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -195,7 +194,7 @@ public:
     
     const std::string& getLexeme() { return value.lexeme; }
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -208,7 +207,7 @@ public:
     
     bool value;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -222,7 +221,7 @@ public:
     Token kwd;
     AstNode* value;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -234,7 +233,7 @@ public:
     
     Token none;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -248,7 +247,7 @@ public:
     AstNode* caller;
     std::vector<AstNode*> args;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -260,7 +259,7 @@ public:
     AstNode *name, *value;
     Token op;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -272,7 +271,7 @@ public:
 
     AstNode *cond, *body;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -285,7 +284,7 @@ public:
     
     Token kwd;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -298,7 +297,7 @@ public:
     
     Token kwd;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -311,7 +310,7 @@ public:
     
     Token kwd;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -327,7 +326,7 @@ public:
     const std::vector<AstNode*>& getParams() const { return params; }
     AstNode* getBody() const { return body; }
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 
 private:
     Token fname;
@@ -346,7 +345,7 @@ public:
     const std::string& getName() const { return kname.lexeme; }
     AstNode* getBody() const { return body; }
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 
 private:
     Token kname;
@@ -361,7 +360,7 @@ public:
     PropertyNode(AstNode* object, AstNode* attr)
         : AstNode(AstNodeType::AttrRef), object(object), attribute(attr) {}
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
     
     AstNode *object, *attribute;
 };
@@ -379,7 +378,7 @@ public:
     AstNode *cond, *trueBranch, *elseBranch;;
     std::vector<std::pair<AstNode*, AstNode*>> elifBranches;
 
-    virtual PyObject* accept(NodeVisitor* visitor) override;
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
 
@@ -389,28 +388,27 @@ public:
 
     ~NodeVisitor() = default;
 
-    virtual PyObject* visitProgramNode(ProgramNode* node) = 0;
-    virtual PyObject* visitBlockNode(BlockNode* node) = 0;
-    virtual PyObject* visitPrintNode(PrintNode* node) = 0;
-    virtual PyObject* visitWhileNode(WhileNode* node) = 0;
-    virtual PyObject* visitBreakNode(BreakNode* node) = 0;
-    virtual PyObject* visitContinueNode(ContinueNode* node) = 0;
-    virtual PyObject* visitPassNode(PassNode* node) = 0;
-    virtual PyObject* visitIfNode(IfNode* node) = 0;
-    virtual PyObject* visitAssignNode(AssignNode* node) = 0;
-    virtual PyObject* visitTernaryOpNode(TernaryOpNode* node) = 0;
-    virtual PyObject* visitBinaryOpNode(BinaryOpNode* node) = 0;
-    virtual PyObject* visitUnaryOpNode(UnaryOpNode* node) = 0;
-    virtual PyObject* visitIntNode(IntNode* node) = 0;
-    virtual PyObject* visitFloatNode(FloatNode* node) = 0;
-    virtual PyObject* visitNameNode(NameNode* node) = 0;
-    virtual PyObject* visitStringNode(StringNode* node) = 0;
-    virtual PyObject* visitBooleanNode(BooleanNode* node) = 0;
-    virtual PyObject* visitNullNode(NullNode* node) = 0;
-    virtual PyObject* visitFunctionNode(FunctionNode* node) = 0;
-    virtual PyObject* visitCallNode(CallNode* node) = 0;
-    virtual PyObject* visitReturnNode(ReturnNode* node) = 0;
-    virtual PyObject* visitClassNode(ClassNode* node) = 0;
-    virtual PyObject* visitPropertyNode(PropertyNode* node) = 0;
+    virtual PyCimenObject* visitProgramNode(ProgramNode* node) = 0;
+    virtual PyCimenObject* visitBlockNode(BlockNode* node) = 0;
+    virtual PyCimenObject* visitPrintNode(PrintNode* node) = 0;
+    virtual PyCimenObject* visitWhileNode(WhileNode* node) = 0;
+    virtual PyCimenObject* visitBreakNode(BreakNode* node) = 0;
+    virtual PyCimenObject* visitContinueNode(ContinueNode* node) = 0;
+    virtual PyCimenObject* visitPassNode(PassNode* node) = 0;
+    virtual PyCimenObject* visitIfNode(IfNode* node) = 0;
+    virtual PyCimenObject* visitAssignNode(AssignNode* node) = 0;
+    virtual PyCimenObject* visitTernaryOpNode(TernaryOpNode* node) = 0;
+    virtual PyCimenObject* visitBinaryOpNode(BinaryOpNode* node) = 0;
+    virtual PyCimenObject* visitUnaryOpNode(UnaryOpNode* node) = 0;
+    virtual PyCimenObject* visitIntNode(IntNode* node) = 0;
+    virtual PyCimenObject* visitFloatNode(FloatNode* node) = 0;
+    virtual PyCimenObject* visitNameNode(NameNode* node) = 0;
+    virtual PyCimenObject* visitStringNode(StringNode* node) = 0;
+    virtual PyCimenObject* visitBooleanNode(BooleanNode* node) = 0;
+    virtual PyCimenObject* visitNullNode(NullNode* node) = 0;
+    virtual PyCimenObject* visitFunctionNode(FunctionNode* node) = 0;
+    virtual PyCimenObject* visitCallNode(CallNode* node) = 0;
+    virtual PyCimenObject* visitReturnNode(ReturnNode* node) = 0;
+    virtual PyCimenObject* visitClassNode(ClassNode* node) = 0;
+    virtual PyCimenObject* visitPropertyNode(PropertyNode* node) = 0;
 };
-

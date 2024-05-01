@@ -2,41 +2,40 @@
 
 #include "../ast/ast.hpp"
 #include "../gc/gc.hpp"
-
-class PyObject;
+#include "../scope/scope.hpp"
 
 class Interpreter : public NodeVisitor {
    
 public:
     Interpreter();
         
-    PyObject* interpret(ProgramNode* node);
+    PyCimenObject* interpret(ProgramNode* node);
 
-    virtual PyObject* visitProgramNode(ProgramNode* node) override { return nullptr; }
-    virtual PyObject* visitBlockNode(BlockNode* node) override;
-    virtual PyObject* visitPrintNode(PrintNode* node) override;
-    virtual PyObject* visitWhileNode(WhileNode* node) override;
-    virtual PyObject* visitBreakNode(BreakNode* node) override;
-    virtual PyObject* visitContinueNode(ContinueNode* node) override;
-    virtual PyObject* visitPassNode(PassNode* node) override;
-    virtual PyObject* visitIfNode(IfNode* node) override;
-    virtual PyObject* visitAssignNode(AssignNode* node) override;
-    virtual PyObject* visitTernaryOpNode(TernaryOpNode* node) override;
-    virtual PyObject* visitBinaryOpNode(BinaryOpNode* node) override;
-    virtual PyObject* visitUnaryOpNode(UnaryOpNode* node) override;
-    virtual PyObject* visitIntNode(IntNode* node) override;
-    virtual PyObject* visitFloatNode(FloatNode* node) override;
-    virtual PyObject* visitNameNode(NameNode* node) override;
-    virtual PyObject* visitStringNode(StringNode* node) override;
-    virtual PyObject* visitBooleanNode(BooleanNode* node) override;
-    virtual PyObject* visitNullNode(NullNode* expr) override;
-    virtual PyObject* visitFunctionNode(FunctionNode* node) override;
-    virtual PyObject* visitCallNode(CallNode* node) override;
-    virtual PyObject* visitReturnNode(ReturnNode* node) override;
-    virtual PyObject* visitClassNode(ClassNode* node) override;
-    virtual PyObject* visitPropertyNode(PropertyNode* node) override;
+    virtual PyCimenObject* visitProgramNode(ProgramNode* node) override { return nullptr; }
+    virtual PyCimenObject* visitBlockNode(BlockNode* node) override;
+    virtual PyCimenObject* visitPrintNode(PrintNode* node) override;
+    virtual PyCimenObject* visitWhileNode(WhileNode* node) override;
+    virtual PyCimenObject* visitBreakNode(BreakNode* node) override;
+    virtual PyCimenObject* visitContinueNode(ContinueNode* node) override;
+    virtual PyCimenObject* visitPassNode(PassNode* node) override;
+    virtual PyCimenObject* visitIfNode(IfNode* node) override;
+    virtual PyCimenObject* visitAssignNode(AssignNode* node) override;
+    virtual PyCimenObject* visitTernaryOpNode(TernaryOpNode* node) override;
+    virtual PyCimenObject* visitBinaryOpNode(BinaryOpNode* node) override;
+    virtual PyCimenObject* visitUnaryOpNode(UnaryOpNode* node) override;
+    virtual PyCimenObject* visitIntNode(IntNode* node) override;
+    virtual PyCimenObject* visitFloatNode(FloatNode* node) override;
+    virtual PyCimenObject* visitNameNode(NameNode* node) override;
+    virtual PyCimenObject* visitStringNode(StringNode* node) override;
+    virtual PyCimenObject* visitBooleanNode(BooleanNode* node) override;
+    virtual PyCimenObject* visitNullNode(NullNode* expr) override;
+    virtual PyCimenObject* visitFunctionNode(FunctionNode* node) override;
+    virtual PyCimenObject* visitCallNode(CallNode* node) override;
+    virtual PyCimenObject* visitReturnNode(ReturnNode* node) override;
+    virtual PyCimenObject* visitClassNode(ClassNode* node) override;
+    virtual PyCimenObject* visitPropertyNode(PropertyNode* node) override;
 
-    void pushContext(Scope* frame) {
+    void pushContext(PyCimenScope* frame) {
         contextStack.push_back(frame);
     }
     
@@ -50,7 +49,7 @@ public:
         }
     }
     
-    Scope* currentContext() { 
+    PyCimenScope* currentContext() { 
         
         if(!contextStack.empty()) {
             return contextStack.back();
@@ -59,20 +58,20 @@ public:
         }
     }
     
-    void defineOnContext(const std::string& name, PyObject* value) {
+    void defineOnContext(const std::string& name, PyCimenObject* value) {
         
         if(!contextStack.empty()){
-            Scope* lastFrame = contextStack.back();
+            PyCimenScope* lastFrame = contextStack.back();
             lastFrame->define(name, value);
         } else {
             throw std::runtime_error("Cannot define variable outside of context");
         }
     }
     
-    PyObject* getFromContext(const std::string& name) {
+    PyCimenObject* getFromContext(const std::string& name) {
         
         if(!contextStack.empty()){
-            Scope* lastFrame = contextStack.back();
+            PyCimenScope* lastFrame = contextStack.back();
             return lastFrame->get(name);
         } else {
             throw std::runtime_error("Cannot access variable outside of context");
@@ -81,5 +80,5 @@ public:
 
 private:
     GarbageCollector GC;
-    std::vector<Scope*> contextStack;
+    std::vector<PyCimenScope*> contextStack;
 };

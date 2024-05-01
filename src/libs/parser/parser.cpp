@@ -1,10 +1,5 @@
 #include "parser.hpp"
 
-#ifndef Py_PYTHON_H
-#define Py_PYTHON_H
-#endif
-#include <Python.h>
-
 Parser::Parser(const std::vector<Token>& tokens) : tokens(tokens) {}
 
 ProgramNode* Parser::parse() {

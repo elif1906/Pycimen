@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../value/pyCallable.hpp"
+#include "../value/PyCimenCallable.hpp"
 #include <iostream>
 #include <string>
 
-class PyStr;
+class PyCimenStr;
 
-class Input : public PyCallable {
+class Input : public PyCimenCallable {
 public:
-    explicit Input() : PyCallable(ObjectType::Builtin, nullptr){}
+    explicit Input() : PyCimenCallable(ObjectType::Builtin, nullptr){}
     
     size_t arity() override { return 0; }
     
-    PyObject* call(Interpreter* interpreter, const std::vector<PyObject*>& args) override {
+    PyCimenObject* call(Interpreter* interpreter, const std::vector<PyCimenObject*>& args) override {
         
         if(!args.empty()) {
             throw std::runtime_error("input() takes no arguments");        
@@ -20,7 +20,7 @@ public:
         std::string inputStr;
         std::getline(std::cin, inputStr);
         
-        return new PyStr(inputStr);
+        return new PyCimenStr(inputStr);
     }
     
     void write(std::ostream& out) const override {

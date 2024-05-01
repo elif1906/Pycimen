@@ -1,9 +1,3 @@
-#ifndef Py_PYTHON_H
-#define Py_PYTHON_H
-#endif
-#include <Python.h>
-
-
 #include "gc.hpp"
 #include <algorithm>
 
@@ -13,7 +7,7 @@ void GarbageCollector::freeUnused() {
                         
         if(object->getRefCount() == 0) {
 
-            std::vector<PyObject*>::iterator position = std::find(objects.begin(), objects.end(), object);
+            std::vector<PyCimenObject*>::iterator position = std::find(objects.begin(), objects.end(), object);
                     
             if(position != objects.end()){
                 objects.erase(position);
@@ -23,7 +17,7 @@ void GarbageCollector::freeUnused() {
     }
 }
 
-void GarbageCollector::pushObject(PyObject* value) {
+void GarbageCollector::pushObject(PyCimenObject* value) {
 
     if(nAllocs >= 50){
         freeUnused();

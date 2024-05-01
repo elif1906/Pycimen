@@ -1,11 +1,11 @@
 #pragma once
 
-#include "./pyInt.hpp"
+#include "./PyCimenInt.hpp"
 
-class PyBool : public PyInt {
+class PyCimenBool : public PyCimenInt {
 public:
-    explicit PyBool(bool v)
-        : PyInt(v ? 1L : 0L) {}
+    explicit PyCimenBool(bool v)
+        : PyCimenInt(v ? 1L : 0L) {}
 
     inline bool isBool() const override { return true; }
     inline bool isTruthy() const override { return getBool(); }

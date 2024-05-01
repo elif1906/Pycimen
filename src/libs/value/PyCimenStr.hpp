@@ -1,29 +1,29 @@
 #pragma once
 
-#include "./pyObject.hpp"
+#include "./PyCimenObject.hpp"
 
-class PyStr : public PyObject {
+class PyCimenStr : public PyCimenObject {
 public:
-    explicit PyStr(const std::string& v) 
-        : PyObject(ObjectType::String, new std::string(v)) {}
+    explicit PyCimenStr(const std::string& v) 
+        : PyCimenObject(ObjectType::String, new std::string(v)) {}
     
     inline bool isStr() const override { return true; } 
     inline bool isTruthy() const override { return getStr() != ""; }
      
-    PyObject* operator+(const PyObject& other) const override {
+    PyCimenObject* operator+(const PyCimenObject& other) const override {
         if(other.isStr()) {
-            const PyStr* rhs = dynamic_cast<const PyStr*>(&other);
-            return new PyStr(getStr() + rhs->getStr());
+            const PyCimenStr* rhs = dynamic_cast<const PyCimenStr*>(&other);
+            return new PyCimenStr(getStr() + rhs->getStr());
         } else {
             throw std::runtime_error("Unsupported operands for +.");
         }
     }
-    PyObject* operator==(const PyObject& other) const override {
+    PyCimenObject* operator==(const PyCimenObject& other) const override {
         if(other.isStr()) {
-            const PyStr* rhs = dynamic_cast<const PyStr*>(&other);
-            return new PyBool(getStr() == rhs->getStr());
+            const PyCimenStr* rhs = dynamic_cast<const PyCimenStr*>(&other);
+            return new PyCimenBool(getStr() == rhs->getStr());
         } else {
-            return new PyBool(false);
+            return new PyCimenBool(false);
         }
     }
         

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../value/pyObject.hpp"
+#include "../value/PyCimenObject.hpp"
 
 class GarbageCollector { 
 
 public:
     GarbageCollector() {};
     void freeUnused(); 
-    void pushObject(PyObject* value);
+    void pushObject(PyCimenObject* value);
         
 private:
-    std::vector<PyObject*> objects; 
+    std::vector<PyCimenObject*> objects; 
     unsigned int nAllocs = 0;
 };

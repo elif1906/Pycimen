@@ -2,10 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include "./lexer.hpp"
-#ifndef Py_PYTHON_H
-#define Py_PYTHON_H
-#endif
-#include <Python.h>
 
 Lexer::Lexer(const std::string& source) 
     : source(source), current(0), line(1) {

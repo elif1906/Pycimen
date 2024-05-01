@@ -7,7 +7,7 @@
 using ll = long long int;
 using llf = long double;
 
-class PyObject {
+class PyCimenObject {
 public:
     enum class ObjectType {
         None, 
@@ -17,10 +17,10 @@ public:
         Klass, Instance,
         Builtin
     };
-    PyObject(ObjectType type, void* data = nullptr) 
+    PyCimenObject(ObjectType type, void* data = nullptr) 
         : type(type), data(data) {}
         
-    ~PyObject() {
+    ~PyCimenObject() {
         deleteData();
     }
     
@@ -38,52 +38,52 @@ public:
     virtual inline bool isTruthy() const { 
         throw std::runtime_error("Yet not evaluatable object.");
     }
-    virtual PyObject* operator+(const PyObject& other) const {
+    virtual PyCimenObject* operator+(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for +.");
     }
-    virtual PyObject* operator-(const PyObject& other) const {
+    virtual PyCimenObject* operator-(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for -.");
     }
-    virtual PyObject* operator*(const PyObject& other) const {
+    virtual PyCimenObject* operator*(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for *.");
     }
-    virtual PyObject* operator/(const PyObject& other) const {
+    virtual PyCimenObject* operator/(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for /.");
     }
-    virtual PyObject* operator%(const PyObject& other) const {
+    virtual PyCimenObject* operator%(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for %.");
     }
-    virtual PyObject* operator&(const PyObject& other) const {
+    virtual PyCimenObject* operator&(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for &.");
     }
-    virtual PyObject* operator|(const PyObject& other) const {
+    virtual PyCimenObject* operator|(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for |.");
     }
-    virtual PyObject* operator^(const PyObject& other) const {
+    virtual PyCimenObject* operator^(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for ^.");
     }
-    virtual PyObject* operator<<(const PyObject& other) const {
+    virtual PyCimenObject* operator<<(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for <<.");
     }
-    virtual PyObject* operator>>(const PyObject& other) const {
+    virtual PyCimenObject* operator>>(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for >>.");
     }
-    virtual PyObject* operator==(const PyObject& other) const {
+    virtual PyCimenObject* operator==(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for ==.");
     }
-    virtual PyObject* operator<(const PyObject& other) const {
+    virtual PyCimenObject* operator<(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for <.");
     }
-    virtual PyObject* operator>(const PyObject& other) const {
+    virtual PyCimenObject* operator>(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for >.");
     }
-    virtual PyObject* operator-() const {
+    virtual PyCimenObject* operator-() const {
         throw std::runtime_error("Unsupported operands for unary -.");
     }
-    virtual PyObject* operator~() const {
+    virtual PyCimenObject* operator~() const {
         throw std::runtime_error("Unsupported operands for unary ~.");
     }
-    virtual PyObject* operator!() const {
+    virtual PyCimenObject* operator!() const {
         throw std::runtime_error("Unsupported operands for unary !.");
     }
         
@@ -95,7 +95,7 @@ public:
     void decRefCount() { if(rc > 0) --rc; }
     int getRefCount() const { return rc; }
     
-    friend std::ostream& operator<<(std::ostream& out, const PyObject& value) {
+    friend std::ostream& operator<<(std::ostream& out, const PyCimenObject& value) {
         value.write(out);
         return out;
     }

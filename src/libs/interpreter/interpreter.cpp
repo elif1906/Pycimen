@@ -7,26 +7,23 @@
 #include "../value/primitives.hpp"
 #include "../builtin/builtins.hpp"
 #include <sstream>
-#ifndef Py_PYTHON_H
-#define Py_PYTHON_H
-#endif
-#include <Python.h>
+
 void todo() {
     throw std::runtime_error("Feature not implemented yet");
 }
 
 Interpreter::Interpreter() {
     
-    Scope* builtins = new Scope();
+    PyCimenScope* builtins = new PyCimenScope();
     pushContext(builtins);
-    Scope* globals = new Scope(builtins);
+    PyCimenScope* globals = new PyCimenScope(builtins);
     pushContext(globals);
     
     std::string inputRepr("input");    
     builtins->define(inputRepr, new Input());
 }
 
-PyObject* Interpreter::interpret(ProgramNode* node) {
+PyCimenObject* Interpreter::interpret(ProgramNode* node) {
     return node->body->accept(this);
 }
 
@@ -44,19 +41,19 @@ std::string formatNumber(llf number) {
     return oss.str();
 }
 
-PyObject* Interpreter::visitPrintNode(PrintNode* node) {
+PyCimenObject* Interpreter::visitPrintNode(PrintNode* node) {
     
-    PyObject* argValue = nullptr;
+    PyCimenObject* argValue = nullptr;
 
     if (node->args != nullptr) {
         argValue = node->args[0].accept(this);
     }
     if (argValue != nullptr) {
         if((*argValue).isStr()) {
-            const PyStr* obj = dynamic_cast<const PyStr*>(argValue);
+            const PyCimenStr* obj = dynamic_cast<const PyCimenStr*>(argValue);
             std::cout << (*obj).getStr();
         } else if((*argValue).isFloat()) {
-            const PyFloat* obj = dynamic_cast<const PyFloat*>(argValue);
+            const PyCimenFloat* obj = dynamic_cast<const PyCimenFloat*>(argValue);
             std::cout << formatNumber((*obj).getFloat());
         } else {
             std::cout << *argValue;
@@ -64,92 +61,92 @@ PyObject* Interpreter::visitPrintNode(PrintNode* node) {
     }
     std::cout << "\n" << std::flush;
 
-    return new PyNone();
+    return new PyCimenNone();
 }
 
-PyObject* Interpreter::visitIntNode(IntNode* node){
+PyCimenObject* Interpreter::visitIntNode(IntNode* node){
     
     const std::string& str = node->getLexeme();
-    PyObject* value = new PyInt(str);
+    PyCimenObject* value = new PyCimenInt(str);
     GC.pushObject(value);
     return value;
 }
 
-PyObject* Interpreter::visitFloatNode(FloatNode* node){
+PyCimenObject* Interpreter::visitFloatNode(FloatNode* node){
     
     const std::string& str = node->getLexeme();
-    PyObject* value = new PyFloat(str);
+    PyCimenObject* value = new PyCimenFloat(str);
     GC.pushObject(value);
     return value;
 }
 
-PyObject* Interpreter::visitFunctionNode(FunctionNode* node){
+PyCimenObject* Interpreter::visitFunctionNode(FunctionNode* node){
 
     const std::string& fname = node->getName();
-    PyFunction* value = new PyFunction(node, this->currentContext());
+    PyCimenFunction* value = new PyCimenFunction(node, this->currentContext());
     defineOnContext(fname, value);
 
-    return new PyNone();
+    return new PyCimenNone();
 }
 
-PyObject* Interpreter::visitClassNode(ClassNode* node) {
+PyCimenObject* Interpreter::visitClassNode(ClassNode* node) {
     
-    Scope* closure = this->currentContext();
-    Scope* classEnv = new Scope(closure);
+    PyCimenScope* closure = this->currentContext();
+    PyCimenScope* classEnv = new PyCimenScope(closure);
     
     this->pushContext(classEnv);
     node->getBody()->accept(this);
     this->popContext();
     
     const std::string& kname = node->getName();
-    PyClass* value = new PyClass(kname, classEnv);
+    PyCimenClass* value = new PyCimenClass(kname, classEnv);
 
     closure->define(kname, value);
     
-    return new PyNone();
+    return new PyCimenNone();
 }
 
-PyObject* Interpreter::visitPropertyNode(PropertyNode* node) {
+PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
     
-    PyObject* object = node->object->accept(this);
+    PyCimenObject* object = node->object->accept(this);
     NameNode* attr = static_cast<NameNode*>(node->attribute);
     const std::string& name = attr->getLexeme();
     
     if(object->isInstance()) {
     
-        PyInstance* instance = static_cast<PyInstance*>(object);
+        PyCimenInstance* instance = static_cast<PyCimenInstance*>(object);
         
-        Scope* context = instance->getContext();
-        PyObject* value = context->get(name);
+        PyCimenScope* context = instance->getContext();
+        PyCimenObject* value = context->get(name);
         
         if(value->isFunc()) {
-            return static_cast<PyFunction*>(value)->bind(instance);
+            return static_cast<PyCimenFunction*>(value)->bind(instance);
         } else {
             return value;
         }
         
     } else if(object->isFunc()) {
         
-        PyFunction* function = static_cast<PyFunction*>(object);
+        PyCimenFunction* function = static_cast<PyCimenFunction*>(object);
         
-        Scope* context = function->getContext();
+        PyCimenScope* context = function->getContext();
         return context->get(name);
     }
     
-    return new PyNone();
+    return new PyCimenNone();
 }
 
-PyObject* Interpreter::visitBlockNode(BlockNode* node) {
+PyCimenObject* Interpreter::visitBlockNode(BlockNode* node) {
     
     for(auto statement : node->statements) {
     	statement->accept(this);
     }
-    return new PyNone();
+    return new PyCimenNone();
 }
 
-PyObject* Interpreter::visitWhileNode(WhileNode* node){
+PyCimenObject* Interpreter::visitWhileNode(WhileNode* node){
 
-    PyObject* cond = node->cond->accept(this);
+    PyCimenObject* cond = node->cond->accept(this);
 
     while(cond->isTruthy()){
      	try {
@@ -161,32 +158,32 @@ PyObject* Interpreter::visitWhileNode(WhileNode* node){
      	}
         cond = node->cond->accept(this);
     }
-    return new PyNone();
+    return new PyCimenNone();
 }
 
-PyObject* Interpreter::visitBreakNode(BreakNode* node) {
+PyCimenObject* Interpreter::visitBreakNode(BreakNode* node) {
     throw BreakException();
     return nullptr; // unreachable
 }
 
-PyObject* Interpreter::visitContinueNode(ContinueNode* node) {
+PyCimenObject* Interpreter::visitContinueNode(ContinueNode* node) {
     throw ContinueException();
     return nullptr; // unreachable
 }
 
-PyObject* Interpreter::visitPassNode(PassNode* node) {
-    return new PyNone();
+PyCimenObject* Interpreter::visitPassNode(PassNode* node) {
+    return new PyCimenNone();
 }
 
-PyObject* Interpreter::visitIfNode(IfNode* node) {
+PyCimenObject* Interpreter::visitIfNode(IfNode* node) {
 
-    PyObject* cond = node->cond->accept(this);
+    PyCimenObject* cond = node->cond->accept(this);
 
     if (cond->isTruthy()) {
         return node->trueBranch->accept(this);
     } else {
         for (const auto& elif : node->elifBranches) {
-            PyObject* elifCond = elif.first->accept(this);
+            PyCimenObject* elifCond = elif.first->accept(this);
             if (elifCond->isTruthy()) {
                 return elif.second->accept(this);
             }
@@ -195,12 +192,12 @@ PyObject* Interpreter::visitIfNode(IfNode* node) {
             return node->elseBranch->accept(this);
         }
     }
-    return new PyNone();
+    return new PyCimenNone();
 }
 
-PyObject* Interpreter::visitTernaryOpNode(TernaryOpNode* node) {
+PyCimenObject* Interpreter::visitTernaryOpNode(TernaryOpNode* node) {
 
-    PyObject* cond = node->cond->accept(this);
+    PyCimenObject* cond = node->cond->accept(this);
 
     if(cond->isTruthy()) {
         return node->left->accept(this);
@@ -210,15 +207,15 @@ PyObject* Interpreter::visitTernaryOpNode(TernaryOpNode* node) {
     return nullptr; // unreachable
 }
 
-PyObject* Interpreter::visitBinaryOpNode(BinaryOpNode* node)  {
+PyCimenObject* Interpreter::visitBinaryOpNode(BinaryOpNode* node)  {
 
-    PyObject* leftValue = node->left->accept(this);
+    PyCimenObject* leftValue = node->left->accept(this);
     leftValue->incRefCount();
 
-    PyObject* rightValue = node->right->accept(this);
+    PyCimenObject* rightValue = node->right->accept(this);
     rightValue->incRefCount();
 
-    PyObject* value = nullptr;
+    PyCimenObject* value = nullptr;
 
     switch(node->op.type) {
         case TokenType::Plus: // TODO: replace with __add__ call
@@ -310,11 +307,11 @@ PyObject* Interpreter::visitBinaryOpNode(BinaryOpNode* node)  {
     return value;
 }
 
-PyObject* Interpreter::visitAssignNode(AssignNode* node) {
+PyCimenObject* Interpreter::visitAssignNode(AssignNode* node) {
     
     AstNode* targetNode = node->name;
     std::string varName;
-    Scope* currCtx = nullptr;
+    PyCimenScope* currCtx = nullptr;
     
     if(targetNode->is_name_node()) {
         NameNode* name = static_cast<NameNode*>(targetNode);
@@ -323,8 +320,8 @@ PyObject* Interpreter::visitAssignNode(AssignNode* node) {
         
     } else if (targetNode->is_property_node()) {
         PropertyNode* propertyNode = static_cast<PropertyNode*>(targetNode);
-        PyObject* object = propertyNode->object->accept(this);
-        PyInstance* instance = static_cast<PyInstance*>(object);
+        PyCimenObject* object = propertyNode->object->accept(this);
+        PyCimenInstance* instance = static_cast<PyCimenInstance*>(object);
         NameNode* attribute = static_cast<NameNode*>(propertyNode->attribute);
         varName = attribute->getLexeme();
         currCtx = instance->getContext();
@@ -333,13 +330,13 @@ PyObject* Interpreter::visitAssignNode(AssignNode* node) {
         throw std::runtime_error("Unsupported target expression");
     }
     
-    PyObject* value = node->value->accept(this);
+    PyCimenObject* value = node->value->accept(this);
     value->incRefCount();
     
     if(node->op.type == TokenType::Equals) {
         currCtx->define(varName, value);
     } else {
-        PyObject* targetValue = currCtx->get(varName);
+        PyCimenObject* targetValue = currCtx->get(varName);
         targetValue->incRefCount();
         
         switch(node->op.type) {
@@ -384,28 +381,28 @@ PyObject* Interpreter::visitAssignNode(AssignNode* node) {
     return value;
 }
 
-PyObject* Interpreter::visitNameNode(NameNode* node){
+PyCimenObject* Interpreter::visitNameNode(NameNode* node){
     const std::string& varname = node->getLexeme();
     return getFromContext(varname);
 }
 
-PyObject* Interpreter::visitBooleanNode(BooleanNode* node){
-    PyObject* value = new PyBool(node->value);
+PyCimenObject* Interpreter::visitBooleanNode(BooleanNode* node){
+    PyCimenObject* value = new PyCimenBool(node->value);
     GC.pushObject(value);
     return value;
 }
 
-PyObject* Interpreter::visitStringNode(StringNode* node){
+PyCimenObject* Interpreter::visitStringNode(StringNode* node){
     const std::string& str = node->getLexeme();
-    PyObject* value = new PyStr(str);
+    PyCimenObject* value = new PyCimenStr(str);
     GC.pushObject(value);
     return value;
 }
 
-PyObject* Interpreter::visitUnaryOpNode(UnaryOpNode* node){
+PyCimenObject* Interpreter::visitUnaryOpNode(UnaryOpNode* node){
 
-    PyObject* operandValue = node->right->accept(this);
-    PyObject* result = nullptr;
+    PyCimenObject* operandValue = node->right->accept(this);
+    PyCimenObject* result = nullptr;
 
     switch(node->op.type) {
         case TokenType::Minus:
@@ -424,22 +421,22 @@ PyObject* Interpreter::visitUnaryOpNode(UnaryOpNode* node){
     return result;
 }
 
-PyObject* Interpreter::visitNullNode(NullNode* expr){
-    PyObject* value = new PyNone();
+PyCimenObject* Interpreter::visitNullNode(NullNode* expr){
+    PyCimenObject* value = new PyCimenNone();
     GC.pushObject(value);
     return value;
 }
 
-PyObject* Interpreter::visitCallNode(CallNode* expr) {
+PyCimenObject* Interpreter::visitCallNode(CallNode* expr) {
     
-    PyObject* callee = expr->caller->accept(this);
+    PyCimenObject* callee = expr->caller->accept(this);
     
     if (!callee->isCallable()) {
         throw std::runtime_error("not a callable object");
     }
-    PyCallable* callable = static_cast<PyCallable*>(callee);
+    PyCimenCallable* callable = static_cast<PyCimenCallable*>(callee);
     
-    std::vector<PyObject*> arguments;
+    std::vector<PyCimenObject*> arguments;
     arguments.reserve(expr->args.size());
     
     for(AstNode* argumentNode : expr->args) {
@@ -449,10 +446,10 @@ PyObject* Interpreter::visitCallNode(CallNode* expr) {
 }
 
 
-PyObject* Interpreter::visitReturnNode(ReturnNode* node) {
+PyCimenObject* Interpreter::visitReturnNode(ReturnNode* node) {
     
     AstNode* value = node->value;
-    PyObject* retValue = value ? value->accept(this) : new PyNone();
+    PyCimenObject* retValue = value ? value->accept(this) : new PyCimenNone();
     throw ReturnException(retValue);
     return nullptr; // unreachable
-}
+};

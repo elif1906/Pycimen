@@ -1,14 +1,14 @@
 #ifndef PRIMITIVES_HPP
 #define PRIMITIVES_HPP
 
-#include "./pyInt.hpp"
-#include "./pyFloat.hpp"
-#include "./pyBool.hpp"
-#include "./pyStr.hpp"
-#include "./pyList.hpp"
-#include "./pyNone.hpp"
-#include "./pyFunction.hpp"
-#include "./pyClass.hpp"
-#include "./pyInstance.hpp"
+#include "./PyCimenInt.hpp"
+#include "./PyCimenFloat.hpp"
+#include "./PyCimenBool.hpp"
+#include "./PyCimenStr.hpp"
+#include "./PyCimenList.hpp"
+#include "./PyCimenNone.hpp"
+#include "./PyCimenFunction.hpp"
+#include "./PyCimenClass.hpp"
+#include "./PyCimenInstance.hpp"
 
 #endif
