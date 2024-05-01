@@ -69,75 +69,50 @@ int main(int argc, char* argv[]) {
       
 
     Py_Initialize();
-    import_array(); 
-
-   
-    npy_intp dims[2] = {3, 4}; 
-    PyObject* py_array = PyArray_SimpleNew(2, dims, NPY_DOUBLE);
-
-    if (!py_array) {
-        PyErr_Print();
-        Py_Finalize();
-        return EXIT_FAILURE;
-    }
-
-   
-    double* data = static_cast<double*>(PyArray_DATA(py_array));
-    for (int i = 0; i < dims[0]; ++i) {
-        for (int j = 0; j < dims[1]; ++j) {
-            *(data + i * dims[1] + j) = (i + 1) * (j + 1); 
-        }
-    }
+    import_array();
 
     
-    std::cout << "Arrays:" << std::endl;
-    for (int i = 0; i < dims[0]; ++i) {
-        for (int j = 0; j < dims[1]; ++j) {
-            std::cout << *(data + i * dims[1] + j) << " ";
-        }
-        std::cout << std::endl;
-    }
+    npy_intp dims = 3;  
+    double* data = new double[3] {1.0, 2.0, 3.0}; 
+    PyObject* py_array = PyArray_SimpleNewFromData(1, &dims, NPY_DOUBLE, data);
 
     
-    PyObject* max_module = PyImport_ImportModule("numpy");
-    if (!max_module) {
-        PyErr_Print();
+    PyObject* numpy_module = PyImport_ImportModule("numpy");
+    if (!numpy_module) {
+        std::cerr << "Failed to load NumPy module." << std::endl;
         Py_DECREF(py_array);
-        Py_Finalize();
-        return EXIT_FAILURE;
+        delete[] data;
+        return 1;
     }
 
-    PyObject* max_func = PyObject_GetAttrString(max_module, "max");
-    Py_DECREF(max_module);
-
-    if (!max_func) {
-        PyErr_Print();
+    PyObject* mean_func = PyObject_GetAttrString(numpy_module, "mean");
+    if (!mean_func || !PyCallable_Check(mean_func)) {
+        std::cerr << "Could not find NumPy's mean function." << std::endl;
         Py_DECREF(py_array);
-        Py_Finalize();
-        return EXIT_FAILURE;
+        Py_DECREF(numpy_module);
+        delete[] data;
+        return 1;
     }
 
-    PyObject* max_args = Py_BuildValue("(O)", py_array);
-    PyObject* max_result = PyObject_CallObject(max_func, max_args);
-    Py_DECREF(max_args);
-
-    if (!max_result) {
-        PyErr_Print();
-        Py_DECREF(max_func);
+    PyObject* arrayRes = PyObject_CallFunctionObjArgs(mean_func, py_array, NULL);
+    if (!arrayRes) {
+        std::cerr << "Failed to call NumPy's mean function." << std::endl;
         Py_DECREF(py_array);
-        Py_Finalize();
-        return EXIT_FAILURE;
+        Py_DECREF(numpy_module);
+        Py_DECREF(mean_func);
+        delete[] data;
+        return 1;
     }
 
-    double max_value = PyFloat_AsDouble(max_result);
-    std::cout << "Max Value: " << max_value << std::endl;
+    double mean = PyFloat_AsDouble(arrayRes);
+    std::cout << "Mean of the array: " << mean << std::endl;
 
-    
-    Py_DECREF(max_result);
-    Py_DECREF(max_func);
+    // Belleği temizle
+    Py_DECREF(arrayRes);
+    Py_DECREF(mean_func);
+    Py_DECREF(numpy_module);
     Py_DECREF(py_array);
-
-    Py_Finalize();
+    delete[] data;
 
     
 
