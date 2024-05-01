@@ -69,74 +69,77 @@ int main(int argc, char* argv[]) {
       
 
     Py_Initialize();
+    import_array(); 
 
-    PyObject* numpy_module = PyImport_ImportModule("numpy");
-    if (!numpy_module) {
-        PyErr_Print();
-        Py_Finalize();
-        return EXIT_FAILURE;
-    }
+   
+    npy_intp dims[2] = {3, 4}; 
+    PyObject* py_array = PyArray_SimpleNew(2, dims, NPY_DOUBLE);
 
-    import_array();  
-
-    int nd = 2;
-    npy_intp dims[2] = {6, 1};
-    int type_code = NPY_INT;
-
-    PyObject* py_array = PyArray_SimpleNew(nd, dims, type_code);
     if (!py_array) {
         PyErr_Print();
-        Py_DECREF(numpy_module);
         Py_Finalize();
         return EXIT_FAILURE;
     }
 
-    int* data = (int*)PyArray_DATA(py_array);
-    if (!data) {
+   
+    double* data = static_cast<double*>(PyArray_DATA(py_array));
+    for (int i = 0; i < dims[0]; ++i) {
+        for (int j = 0; j < dims[1]; ++j) {
+            *(data + i * dims[1] + j) = (i + 1) * (j + 1); 
+        }
+    }
+
+    
+    std::cout << "Arrays:" << std::endl;
+    for (int i = 0; i < dims[0]; ++i) {
+        for (int j = 0; j < dims[1]; ++j) {
+            std::cout << *(data + i * dims[1] + j) << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    
+    PyObject* max_module = PyImport_ImportModule("numpy");
+    if (!max_module) {
         PyErr_Print();
         Py_DECREF(py_array);
-        Py_DECREF(numpy_module);
         Py_Finalize();
         return EXIT_FAILURE;
     }
 
-    npy_intp dims_res = *PyArray_DIMS(py_array);
-    cout << "dims: " << dims_res << endl;
+    PyObject* max_func = PyObject_GetAttrString(max_module, "max");
+    Py_DECREF(max_module);
 
-    // Set array values
-    data[0] = 1;
-    data[1] = 2;
-    // ...
-
-    PyObject* mean_func = PyObject_GetAttrString(numpy_module, "mean");
-    if (!mean_func || !PyCallable_Check(mean_func)) {
+    if (!max_func) {
         PyErr_Print();
         Py_DECREF(py_array);
-        Py_DECREF(numpy_module);
         Py_Finalize();
         return EXIT_FAILURE;
     }
 
-    PyObject* arrayRes = PyObject_CallFunction(mean_func, "O", py_array);
-    if (!arrayRes) {
+    PyObject* max_args = Py_BuildValue("(O)", py_array);
+    PyObject* max_result = PyObject_CallObject(max_func, max_args);
+    Py_DECREF(max_args);
+
+    if (!max_result) {
         PyErr_Print();
+        Py_DECREF(max_func);
         Py_DECREF(py_array);
-        Py_DECREF(numpy_module);
-        Py_DECREF(mean_func);
         Py_Finalize();
         return EXIT_FAILURE;
     }
 
-    double mean_value = PyFloat_AsDouble(arrayRes);
-    cout << "Mean value: " << mean_value << endl;
+    double max_value = PyFloat_AsDouble(max_result);
+    std::cout << "Max Value: " << max_value << std::endl;
 
-    // Clean up
-    Py_DECREF(arrayRes);
-    Py_DECREF(mean_func);
+    
+    Py_DECREF(max_result);
+    Py_DECREF(max_func);
     Py_DECREF(py_array);
-    Py_DECREF(numpy_module);
 
     Py_Finalize();
+
+    
 
     return 0;
 }
