@@ -74,6 +74,13 @@ void Lexer::scanToken() {
             addToken(TokenType::RightBrace);
             isBlock = false;
             break;
+
+        case '[':
+            addToken(TokenType::LeftBracket);
+            break;
+        case ']':
+            addToken(TokenType::RightBracket);
+            break;    
         case ',':
             addToken(TokenType::Comma);
             break;
@@ -147,14 +154,17 @@ void Lexer::scanToken() {
             handleString(c);
             break;
         default:
-            if (isdigit(c)) {
-                handleNumber();
-            } else if (isalpha(c) or c == '_') {
-                handleIdentifier();
-            } else {
-                throw std::runtime_error("Unexpected character.");
-            }
-            break;
+           if (isdigit(c)) {
+            handleNumber();
+        } else if (isalpha(c) || c == '_') {
+            handleIdentifier();
+        } else if (c == '.' || c == '/' || c == '*') {
+            // NumPy'daki özel işaretler
+            addToken(TokenType::Name, std::string(1, c));
+        } else {
+            throw std::runtime_error("Unexpected character: " + std::string(1, c));
+        }
+        break;
     }
 }
 

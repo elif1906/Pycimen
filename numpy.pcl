@@ -1,4 +1,4 @@
+import numpy as np
 
-arr = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]]
-max_val = np.max(arr)
-print(max_val)
+arr = np.array([1, 2, 3, 4, 5])
+print(np.mean(arr))

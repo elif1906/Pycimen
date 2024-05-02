@@ -134,6 +134,11 @@ public:
                 out << "Newline"; break;
             case TokenType::EndOfFile:
                 out << "EndOfFile"; break;
+                
+            case TokenType::LeftBracket:
+                out << "LeftBracket"; break;
+            case TokenType::RightBracket:
+                out << "RightBracket"; break;
             default:
                 out << "Error"; break;
         }

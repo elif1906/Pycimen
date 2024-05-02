@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
 
     PyObject* mean_func = PyObject_GetAttrString(numpy_module, "mean");
     if (!mean_func || !PyCallable_Check(mean_func)) {
-        std::cerr << "Could not find NumPy's mean function." << std::endl;
+        std::cerr << "NumPy'ın ortalama fonksiyonu bulunamadı." << std::endl;
         Py_DECREF(py_array);
         Py_DECREF(numpy_module);
         delete[] data;
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
 
     PyObject* arrayRes = PyObject_CallFunctionObjArgs(mean_func, py_array, NULL);
     if (!arrayRes) {
-        std::cerr << "Failed to call NumPy's mean function." << std::endl;
+        std::cerr << "NumPy'ın ortalama fonksiyonu çağrılamadı." << std::endl;
         Py_DECREF(py_array);
         Py_DECREF(numpy_module);
         Py_DECREF(mean_func);
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
     }
 
     double mean = PyFloat_AsDouble(arrayRes);
-    std::cout << "Mean of the array: " << mean << std::endl;
+    std::cout << "Dizinin ortalaması: " << mean << std::endl;
 
     // Belleği temizle
     Py_DECREF(arrayRes);

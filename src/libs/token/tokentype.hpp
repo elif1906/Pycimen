@@ -33,7 +33,8 @@ enum TokenType {
     Comma, Colon, Semicolon,
     Indent, Dedent, 
     Newline, 
-    EndOfFile,
+    EndOfFile,LeftBracket,
+    RightBracket,
     
     // Identifiers and literals
     Int, Float, Name, String,

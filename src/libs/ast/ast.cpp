@@ -252,3 +252,4 @@ PyCimenObject* ReturnNode::accept(NodeVisitor* visitor) {
     #endif
     return value;
 }
+
