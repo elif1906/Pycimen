@@ -25,6 +25,7 @@ enum class AstNodeType {
     If, Function, Return,
     Class, AttrRef,
     Pass,
+    Import,
 
     // Expressions
     UnaryOp, BinaryOp, TernaryOp,
@@ -334,6 +335,23 @@ private:
     AstNode* body;
 };
 
+class ImportNode : public AstNode {
+  public:
+
+    ImportNode(std::string moduleName) : AstNode(AstNodeType::Import){
+      moduleName = moduleName;
+    }
+
+    std::string getModuleName() {
+      return this->moduleName;
+    }
+
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
+
+  private:
+    std::string moduleName;
+};
+
 
 class ClassNode : public AstNode {
 
@@ -388,6 +406,7 @@ public:
 
     ~NodeVisitor() = default;
 
+    virtual PyCimenObject* visitImportNode(ImportNode* node) = 0;
     virtual PyCimenObject* visitProgramNode(ProgramNode* node) = 0;
     virtual PyCimenObject* visitBlockNode(BlockNode* node) = 0;
     virtual PyCimenObject* visitPrintNode(PrintNode* node) = 0;

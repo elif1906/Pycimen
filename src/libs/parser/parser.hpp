@@ -43,7 +43,8 @@ private:
     AstNode* parseUnary();
     AstNode* parseCall(AstNode *func_name);
     AstNode* parsePrimary();
-    AstNode* parseAtom();   
+    AstNode* parseAtom();
+    AstNode* parseImportStmt();   
     std::vector<AstNode*> parseParameterList();
     AstNode* parseFunctionDef();
     AstNode* parseClassDef();

@@ -31,7 +31,8 @@ Lexer::Lexer(const std::string& source)
         {"break", TokenType::Break},
         {"continue", TokenType::Continue},
         {"pass", TokenType::Pass},
-        {"class", TokenType::Class}
+        {"class", TokenType::Class},
+        {"import", TokenType::Import},
     };
 }
 

@@ -10,8 +10,10 @@ public:
     Interpreter();
         
     PyCimenObject* interpret(ProgramNode* node);
+    
 
     virtual PyCimenObject* visitProgramNode(ProgramNode* node) override { return nullptr; }
+    virtual PyCimenObject* visitImportNode(ImportNode* node) override;
     virtual PyCimenObject* visitBlockNode(BlockNode* node) override;
     virtual PyCimenObject* visitPrintNode(PrintNode* node) override;
     virtual PyCimenObject* visitWhileNode(WhileNode* node) override;
@@ -82,3 +84,4 @@ private:
     GarbageCollector GC;
     std::vector<PyCimenScope*> contextStack;
 };
+

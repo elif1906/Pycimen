@@ -47,7 +47,11 @@ AstNode* Parser::parseStmt() {
     } else if (match(TokenType::Class)) {
         return parseClassDef();
     
-    } else {
+    } else if (match(TokenType::Import)) {
+        return parseImportStmt();
+    }
+    
+     else {
         std::vector<AstNode*> stmtList = parseStmtList();
         while(match(TokenType::Newline)) continue;
         
@@ -209,6 +213,27 @@ AstNode* Parser::parsePrintStmt() {
     } consume(TokenType::RightParen);
 
     return new PrintNode(expr);
+}
+
+AstNode* Parser::parseImportStmt() {
+    /*
+     *    import_stmt ::= import (module_name | module_name.submodule)*
+    */
+    consume(TokenType::Import);
+    std::vector<Token> moduleTokens;
+    
+    moduleTokens.push_back(consume(TokenType::Name));
+    while (match(TokenType::Dot)) {
+        moduleTokens.push_back(previous());
+        moduleTokens.push_back(consume(TokenType::Name));
+    }
+    
+    std::string moduleName;
+    for (const Token& token : moduleTokens) {
+        moduleName += token.lexeme;
+    }
+    
+    return new ImportNode(moduleName);
 }
 
 AstNode* Parser::parseSuite() {

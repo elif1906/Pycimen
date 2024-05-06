@@ -55,6 +55,17 @@ PyCimenObject* NameNode::accept(NodeVisitor* visitor) {
     return value;
 }
 
+PyCimenObject* ImportNode::accept(NodeVisitor* visitor) {
+    #ifdef DEBUG
+        std::cout << "visiting " << "ImportMode" << "\n";
+    #endif
+    PyCimenObject* value = visitor->visitImportNode(this);
+    #ifdef DEBUG
+        std::cout << "exiting " << "ImportMode" << "\n";
+    #endif
+    return value;
+}
+
 PyCimenObject* StringNode::accept(NodeVisitor* visitor) {
     #ifdef DEBUG
         std::cout << "visiting " << "StringNode" << "\n";

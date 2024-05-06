@@ -9,9 +9,6 @@
 #include "../libs/interpreter/interpreter.hpp"
 #include <string.h>
 
-#pragma GCC optimize("Ofast")
-#pragma GCC target("avx,avx2,fma")
-
 using namespace std;
 
 inline void show_tokens(const vector<Token>& tokens) {
@@ -60,61 +57,20 @@ int main(int argc, char* argv[]) {
 
         Interpreter interpreter;
         interpreter.interpret(root);
-        
+
     } catch (const runtime_error& err) {
         cerr << err.what() << '\n';
         return EXIT_FAILURE;
     }
 
-      
+    // Py_Initialize();
+    // import_array();
 
-    Py_Initialize();
-    import_array();
+    // PyRun_SimpleString("import numpy");
 
-    
-    npy_intp dims = 3;  
-    double* data = new double[3] {1.0, 2.0, 3.0}; 
-    PyObject* py_array = PyArray_SimpleNewFromData(1, &dims, NPY_DOUBLE, data);
+   
 
-    
-    PyObject* numpy_module = PyImport_ImportModule("numpy");
-    if (!numpy_module) {
-        std::cerr << "Failed to load NumPy module." << std::endl;
-        Py_DECREF(py_array);
-        delete[] data;
-        return 1;
-    }
-
-    PyObject* mean_func = PyObject_GetAttrString(numpy_module, "mean");
-    if (!mean_func || !PyCallable_Check(mean_func)) {
-        std::cerr << "NumPy'ın ortalama fonksiyonu bulunamadı." << std::endl;
-        Py_DECREF(py_array);
-        Py_DECREF(numpy_module);
-        delete[] data;
-        return 1;
-    }
-
-    PyObject* arrayRes = PyObject_CallFunctionObjArgs(mean_func, py_array, NULL);
-    if (!arrayRes) {
-        std::cerr << "NumPy'ın ortalama fonksiyonu çağrılamadı." << std::endl;
-        Py_DECREF(py_array);
-        Py_DECREF(numpy_module);
-        Py_DECREF(mean_func);
-        delete[] data;
-        return 1;
-    }
-
-    double mean = PyFloat_AsDouble(arrayRes);
-    std::cout << "Dizinin ortalaması: " << mean << std::endl;
-
-    // Belleği temizle
-    Py_DECREF(arrayRes);
-    Py_DECREF(mean_func);
-    Py_DECREF(numpy_module);
-    Py_DECREF(py_array);
-    delete[] data;
-
-    
+    // Py_Finalize();
 
     return 0;
 }

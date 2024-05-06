@@ -64,6 +64,15 @@ PyCimenObject* Interpreter::visitPrintNode(PrintNode* node) {
     return new PyCimenNone();
 }
 
+PyCimenObject* Interpreter::visitImportNode(ImportNode* node) {
+    
+    PyCimenObject* argValue = nullptr;
+
+    std::cout << "importing " << node->getModuleName() <<std::flush;
+
+    return new PyCimenNone();
+}
+
 PyCimenObject* Interpreter::visitIntNode(IntNode* node){
     
     const std::string& str = node->getLexeme();
@@ -453,3 +462,4 @@ PyCimenObject* Interpreter::visitReturnNode(ReturnNode* node) {
     throw ReturnException(retValue);
     return nullptr; // unreachable
 };
+

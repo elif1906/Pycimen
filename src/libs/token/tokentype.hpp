@@ -9,6 +9,7 @@ enum TokenType {
     True, False, None,
     And, Or, Not,
     Pass,
+    Import,
     
     // Operators
     Plus, Minus, 
