@@ -6,6 +6,7 @@
 #include "../exceptions/runtime_exceptions.hpp" // break, continue, return
 #include "../value/primitives.hpp"
 #include "../builtin/builtins.hpp"
+#include "../value/PyCimenModule.hpp"
 #include <sstream>
 
 
@@ -66,12 +67,17 @@ PyCimenObject* Interpreter::visitPrintNode(PrintNode* node) {
 }
 
 PyCimenObject* Interpreter::visitImportNode(ImportNode* node) {
-    
-    PyCimenObject* argValue = nullptr;
+    char* moduleName = node->getModuleName().data();
 
-    std::cout << "importing " << node->getModuleName() <<std::flush;
+    std::cout << "Importing " << node->getModuleName() << std::endl << std::flush;
 
-    return new PyCimenNone();
+    PyCimenObject* value = new PyCimenModule(moduleName);
+
+    GC.pushObject(value);
+
+    std::cout << value << std::endl;
+
+    return value;
 }
 
 PyCimenObject* Interpreter::visitIntNode(IntNode* node){

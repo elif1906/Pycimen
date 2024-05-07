@@ -219,9 +219,12 @@ AstNode* Parser::parseImportStmt() {
     /*
      *    import_stmt ::= import "(module)" as? "(name)"?"
     */
+
     Token module = consume(TokenType::Name);
 
-    return new ImportNode(module.lexeme);
+    ImportNode* node = new ImportNode(module.lexeme);
+
+    return node;
 }
 
 AstNode* Parser::parseSuite() {

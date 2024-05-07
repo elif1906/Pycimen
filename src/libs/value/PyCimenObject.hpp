@@ -15,7 +15,8 @@ public:
         Boolean, String,
         List, Func, 
         Klass, Instance,
-        Builtin
+        Builtin,
+        Module,
     };
     PyCimenObject(ObjectType type, void* data = nullptr) 
         : type(type), data(data) {}
@@ -34,7 +35,8 @@ public:
     virtual inline bool isInstance() const { return false; }
     virtual inline bool isNone() const { return false; }
     virtual inline bool isCallable() const { return false; }
-    
+    virtual inline bool isModule() const { return false; }
+
     virtual inline bool isTruthy() const { 
         throw std::runtime_error("Yet not evaluatable object.");
     }

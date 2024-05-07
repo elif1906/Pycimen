@@ -43,6 +43,10 @@ int main(int argc, char* argv[]) {
 
     string source((istreambuf_iterator<char>(inputFile)), {});
 
+    Py_Initialize();
+
+    import_array();
+
     try {
         Lexer lexer(source);
         vector<Token> tokens = lexer.scanTokens();
@@ -63,14 +67,8 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // Py_Initialize();
-    // import_array();
 
-    // PyRun_SimpleString("import numpy");
-
-   
-
-    // Py_Finalize();
+    Py_Finalize();
 
     return 0;
 }

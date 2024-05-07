@@ -339,7 +339,7 @@ class ImportNode : public AstNode {
   public:
 
     ImportNode(std::string moduleName) : AstNode(AstNodeType::Import){
-      moduleName = moduleName;
+      this ->moduleName = moduleName;
     }
 
     std::string getModuleName() {
