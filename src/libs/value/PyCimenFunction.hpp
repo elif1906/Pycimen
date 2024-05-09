@@ -56,7 +56,7 @@ public:
         PyCimenObject* retVal = new PyCimenNone();
         try {
             // Visit the body of the function, switching back to the interpreter's context
-            declaration->getBody()->accept(interpreter);
+            retVal = declaration->getBody()->accept(interpreter);
         } catch(ReturnException& re) {
             delete retVal;
             retVal = re.value;
