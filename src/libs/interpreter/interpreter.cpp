@@ -69,14 +69,10 @@ PyCimenObject* Interpreter::visitPrintNode(PrintNode* node) {
 PyCimenObject* Interpreter::visitImportNode(ImportNode* node) {
     char* moduleName = node->getModuleName().data();
 
-    std::cout << "Importing " << node->getModuleName() << std::endl << std::flush;
-
     PyCimenObject* value = new PyCimenModule(moduleName);
     defineOnContext(node->getModuleName(), value);
 
     GC.pushObject(value);
-
-    std::cout << value << std::endl;
 
     return value;
 }
@@ -148,6 +144,14 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
         
         PyCimenScope* context = function->getContext();
         return context->get(name);
+
+    } else if (object->isModule()) {
+        PyCimenModule* module = static_cast<PyCimenModule*>(object);
+
+        PyCimenScope* context = module->getContext();
+        PyCimenObject* value = context->get(name);
+
+        return value;
     }
     
     return new PyCimenNone();
@@ -455,7 +459,7 @@ PyCimenObject* Interpreter::visitNullNode(NullNode* expr){
 PyCimenObject* Interpreter::visitCallNode(CallNode* expr) {
     
     PyCimenObject* callee = expr->caller->accept(this);
-    
+
     if (!callee->isCallable()) {
         throw std::runtime_error("not a callable object");
     }
