@@ -220,6 +220,17 @@ PyCimenObject* IfNode::accept(NodeVisitor* visitor) {
     return value;
 }
 
+PyCimenObject* ListNode::accept(NodeVisitor* visitor) {
+    #ifdef DEBUG
+        std::cout << "visiting " << "ListNode" << "\n";
+    #endif
+    PyCimenObject* value = visitor->visitListNode(this);
+    #ifdef DEBUG
+        std::cout << "exiting " << "ListNode" << "\n";
+    #endif
+    return value;
+}
+
 PyCimenObject* FunctionNode::accept(NodeVisitor* visitor) {
     #ifdef DEBUG
         std::cout << "visiting " << "FunctionNode" << "\n";

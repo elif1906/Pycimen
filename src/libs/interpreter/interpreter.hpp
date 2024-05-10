@@ -36,6 +36,7 @@ public:
     virtual PyCimenObject* visitReturnNode(ReturnNode* node) override;
     virtual PyCimenObject* visitClassNode(ClassNode* node) override;
     virtual PyCimenObject* visitPropertyNode(PropertyNode* node) override;
+    virtual PyCimenObject* visitListNode(ListNode* node) override;
 
     void pushContext(PyCimenScope* frame) {
         contextStack.push_back(frame);

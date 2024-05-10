@@ -600,8 +600,21 @@ AstNode* Parser::parseAtom() {
         return expr;
     } else {
         Token tk = advance();
-        
         switch(tk.type) {
+            case TokenType::LeftBracket: {
+                ListNode* list = new ListNode();
+                while (true) {
+                    if (match(TokenType::RightBracket)) {
+                        break;
+                    }
+                    list->append(parseAtom());
+                    if (!match(TokenType::Comma)) {
+                        break;
+                    }
+                }
+                consume(TokenType::RightBracket);
+                return list;
+            }
             case TokenType::Int:
                 return new IntNode(tk);
             case TokenType::Float:
@@ -616,11 +629,14 @@ AstNode* Parser::parseAtom() {
                 return new StringNode(tk);
             case TokenType::Name: {
                 return new NameNode(tk);
-            } default: {
+            }
+            default: {
                 error("Expected a primary expression");
                 return nullptr; 
             }
         }
+        
+       
     }
 }
 

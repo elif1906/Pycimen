@@ -72,6 +72,7 @@ PyCimenObject* Interpreter::visitImportNode(ImportNode* node) {
     std::cout << "Importing " << node->getModuleName() << std::endl << std::flush;
 
     PyCimenObject* value = new PyCimenModule(moduleName);
+    defineOnContext(node->getModuleName(), value);
 
     GC.pushObject(value);
 
@@ -189,6 +190,14 @@ PyCimenObject* Interpreter::visitContinueNode(ContinueNode* node) {
 
 PyCimenObject* Interpreter::visitPassNode(PassNode* node) {
     return new PyCimenNone();
+}
+
+PyCimenObject* Interpreter::visitListNode(ListNode* node) {
+    std::vector<PyCimenObject*> values;
+    for (auto& valueNode : node->get_values()) {
+        values.push_back(valueNode->accept(this));
+    }
+    return new PyCimenList(values);
 }
 
 PyCimenObject* Interpreter::visitIfNode(IfNode* node) {

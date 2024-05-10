@@ -1,11 +1,26 @@
 #pragma once
 
 #include "./PyCimenObject.hpp"
+#include "../ast/ast.hpp"
+
+
+
+class NodeVisitor;
 
 class PyCimenList : public PyCimenObject {
 public:
+    PyCimenList() : PyCimenObject(ObjectType::List, new std::vector<PyCimenObject*>()) {}
+
     explicit PyCimenList(const std::vector<PyCimenObject*>& v)
         : PyCimenObject(ObjectType::List, new std::vector<PyCimenObject*>(v)) {}
+
+
+    PyCimenList(const std::vector<AstNode*>& nodes, NodeVisitor* visitor) 
+        : PyCimenObject(ObjectType::List, new std::vector<PyCimenObject*>()) {
+        for (const auto& node : nodes) {
+            append(node->accept(visitor)); 
+        }
+    }
 
     inline bool isList() const override { return true; }
     inline bool isTruthy() const override { return getList().size() != 0; }

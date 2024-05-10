@@ -33,7 +33,7 @@ enum class AstNodeType {
 
     // Literals
     Name, String,
-    Int, Float, Boolean, Null
+    Int, Float, Boolean, Null, List
 };
 
 
@@ -53,6 +53,31 @@ public:
     virtual PyCimenObject* accept(NodeVisitor* visitor) = 0;
 
     AstNodeType type;
+};
+
+class ListNode : public AstNode {
+public:
+
+  ListNode() : AstNode(AstNodeType::List) {
+    this->values = {};
+  }
+
+  ListNode(std::vector<AstNode*> values) : AstNode(AstNodeType::List) {
+    this->values = values;
+  }
+
+  void append(AstNode* value){
+    values.push_back(value);
+  }
+
+  std::vector<AstNode*> get_values() {
+    return values;
+  }
+
+  virtual PyCimenObject* accept(NodeVisitor* visitor) override;
+
+private:
+  std::vector<AstNode*> values;
 };
 
 
@@ -430,4 +455,5 @@ public:
     virtual PyCimenObject* visitReturnNode(ReturnNode* node) = 0;
     virtual PyCimenObject* visitClassNode(ClassNode* node) = 0;
     virtual PyCimenObject* visitPropertyNode(PropertyNode* node) = 0;
+    virtual PyCimenObject* visitListNode(ListNode* node) = 0;
 };
