@@ -1,5 +1,6 @@
 class PyCimenNumpyArray: public PyCimenObject {
 public:
+    size_t getSize() const { return size; }
     PyCimenNumpyArray(int* data, size_t size): PyCimenObject(ObjectType::NumpyArray, data) {
         this->size = size;
 
@@ -35,4 +36,6 @@ public:
 private:
     size_t size;
     PyCimenObject** list;
+    
+    
 };

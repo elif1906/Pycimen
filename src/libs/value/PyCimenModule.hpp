@@ -4,6 +4,7 @@
 #include "./PyCimenNumpyArray.hpp"
 
 PyCimenObject* numpy_array(const std::vector<PyCimenObject*>&);
+PyCimenObject* numpy_mean(const std::vector<PyCimenObject*>&);
 
 class PyCimenModule : public PyCimenObject {
 public:
@@ -14,6 +15,7 @@ public:
         //array
 
         this->scope->define("array", new PyCimenModuleFunc("array", numpy_array, 1));
+        this->scope->define("mean", new PyCimenModuleFunc("mean", numpy_mean, 1));
     }
 
     PyObject* arrFromIntArray(int* data, int n) {
@@ -60,4 +62,18 @@ PyCimenObject* numpy_array(const std::vector<PyCimenObject*>& args) {
     auto pycimennparray = new PyCimenNumpyArray((int*)PyArray_DATA(numpy_array), size); 
 
     return pycimennparray;
+}
+
+PyCimenObject* numpy_mean(const std::vector<PyCimenObject*>& args) {
+    PyCimenNumpyArray* arr = static_cast<PyCimenNumpyArray*>(args[0]);
+    size_t size = arr->getSize();
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        const PyCimenInt* intElement = dynamic_cast<const PyCimenInt*>((*arr)[i]);
+        if (intElement) {
+            sum += intElement->getInt();
+        }
+    }
+    double mean = static_cast<double>(sum) / size;
+    return new PyCimenFloat(mean);
 }
