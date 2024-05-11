@@ -1,11 +1,15 @@
 import numpy
 
-a = numpy.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+a = numpy.array([3,7,2,1,8])
 
 b = numpy.mean(a)
+
+c = numpy.median(a)
+print("Array Set:")
 print (a)
+print("Mean of Array:")
 print(b)
-
-
+print("Median of Array:")
+print(c)
 
 
