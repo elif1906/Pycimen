@@ -6,6 +6,7 @@
 PyCimenObject* numpy_array(const std::vector<PyCimenObject*>&);
 PyCimenObject* numpy_mean(const std::vector<PyCimenObject*>&);
 PyCimenObject* numpy_median(const std::vector<PyCimenObject*>&);
+PyCimenObject* numpy_std(const std::vector<PyCimenObject*>&);
 class PyCimenModule : public PyCimenObject {
 public:
     PyCimenModule(char* moduleName) : PyCimenObject(PyCimenObject::ObjectType::Module, nullptr) {
@@ -17,6 +18,7 @@ public:
         this->scope->define("array", new PyCimenModuleFunc("array", numpy_array, 1));
         this->scope->define("mean", new PyCimenModuleFunc("mean", numpy_mean, 1));
         this->scope->define("median", new PyCimenModuleFunc("median", numpy_median, 1));
+        this->scope->define("std", new PyCimenModuleFunc("std", numpy_std, 1));
     }
 
     PyObject* arrFromIntArray(int* data, int n) {
@@ -110,3 +112,27 @@ PyCimenObject* numpy_median(const std::vector<PyCimenObject*>& args) {
     return new PyCimenFloat(median);
 }
 
+PyCimenObject* numpy_std(const std::vector<PyCimenObject*>& args) {
+    PyCimenNumpyArray* arr = static_cast<PyCimenNumpyArray*>(args[0]);
+    size_t size = arr->getSize();
+    std::vector<int> values;
+    for (int i = 0; i < size; i++) {
+        const PyCimenInt* intElement = dynamic_cast<const PyCimenInt*>((*arr)[i]);
+        if (intElement) {
+            values.push_back(intElement->getInt());
+        }
+    }
+    PyCimenObject* mean_obj = numpy_mean(args);
+    PyCimenFloat* mean_float = dynamic_cast<PyCimenFloat*>(mean_obj);
+    double mean = mean_float->getFloat();
+
+    double sum = 0.0;
+
+    for (int i = 0; i < size; i++) {
+        sum += pow(values[i] - mean, 2);
+    }
+
+    double stddev = sqrt(sum / (size - 1));
+
+    return new PyCimenFloat(stddev);
+}
