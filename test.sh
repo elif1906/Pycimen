@@ -4,9 +4,9 @@
 make build
 
 # Define ANSI color codes
-green="\e[32m"
-red="\e[31m"
-reset="\e[0m"
+green="\033[32m"
+red="\033[31m"
+reset="\033[0m"
 
 has_failed=false
 
@@ -27,22 +27,21 @@ for testfolder in tests/test_*; do
   expected=$(cat "$expectedfile")
   
   if [ "$output" = "$expected" ]; then
-    echo -e "${green}Test ${testname}: PASSED${reset}"
+    printf "${green}Test ${testname}: PASSED${reset}\n"
   else
-    echo -e "${red}Test ${testname}: FAILED"
-    echo -e "Expected output:${reset}"
-    echo "$expected"
-    echo -e "${red}Actual output:${reset}"
-    echo "$output"
+    printf "${red}Test ${testname}: FAILED${reset}\n"
+    printf "${red}Expected output:${reset}\n"
+    printf "$expected\n"
+    printf "${red}Actual output:${reset}\n"
+    printf "$output\n"
     has_failed=true
   fi
 done
 
 if [ "$has_failed" = false ]; then
-  echo -e "${green}All tests passed!${reset}"
+  printf "${green}All tests passed!${reset}\n"
   exit 0
 else
-  echo -e "${red}Test failure.${reset}"
+  printf "${red}Test failure.${reset}\n"
   exit 1
 fi
-

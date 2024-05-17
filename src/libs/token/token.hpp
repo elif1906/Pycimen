@@ -110,6 +110,9 @@ public:
                 out << "Def"; break;
             case TokenType::While:
                 out << "While"; break;
+
+            case TokenType::For:
+                out << "For"; break;    
             case TokenType::Continue:
                 out << "Continue"; break;
             case TokenType::Break:

@@ -21,7 +21,7 @@ public:
             append(node->accept(visitor)); 
         }
     }
-
+    
     inline bool isList() const override { return true; }
     inline bool isTruthy() const override { return getList().size() != 0; }
 

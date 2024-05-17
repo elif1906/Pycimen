@@ -40,7 +40,8 @@ AstNode* Parser::parseStmt() {
         
     } else if (match(TokenType::While)){
         return parseWhileStmt();
-        
+    } else if (match(TokenType::For)){
+        return parseForStmt();    
     } else if (match(TokenType::Def)){
         return parseFunctionDef();
             
@@ -305,6 +306,23 @@ AstNode* Parser::parseWhileStmt() {
     isInsideLoop--;
 
     return new WhileNode(cond, body);
+}
+AstNode* Parser::parseForStmt() {
+    AstNode* target = parseExpr(); // döngü değişkeni
+    consume(TokenType::In);
+    AstNode* iterable = parseExpr(); // iterable ifadesi
+    consume(TokenType::Colon);
+    isInsideLoop++;
+    AstNode* body = parseSuite(); // döngü gövdesi
+    isInsideLoop--;
+
+    AstNode* elseBranch = nullptr;
+    if (match(TokenType::Else)) {
+        consume(TokenType::Colon);
+        elseBranch = parseSuite();
+    }
+
+    return new ForNode(target, iterable, body, elseBranch);
 }
 
 AstNode* Parser::parseAssignSimple() {

@@ -176,6 +176,18 @@ PyCimenObject* WhileNode::accept(NodeVisitor* visitor) {
     return value;
 }
 
+PyCimenObject* ForNode::accept(NodeVisitor* visitor) {
+    #ifdef DEBUG
+        std::cout << "visiting " << "ForNode" << "\n";
+    #endif
+    PyCimenObject* value = visitor->visitForNode(this);
+    #ifdef DEBUG
+        std::cout << "exiting " << "ForNode" << "\n";
+    #endif
+    return value;
+}
+
+
 PyCimenObject* BreakNode::accept(NodeVisitor* visitor) {
     #ifdef DEBUG
         std::cout << "visiting " << "BreakNode" << "\n";

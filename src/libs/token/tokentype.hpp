@@ -9,7 +9,7 @@ enum TokenType {
     True, False, None,
     And, Or, Not,
     Pass,
-    Import,
+    Import, For,
     
     // Operators
     Plus, Minus, 
@@ -26,7 +26,7 @@ enum TokenType {
     AndEqual, OrEqual, XorEqual,
     LeftShiftEqual, 
     RightShiftEqual,
-    Dot,
+    Dot,In,
     
     // Punctuators
     LeftParen, RightParen,

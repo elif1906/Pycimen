@@ -22,6 +22,7 @@ private:
     AstNode* parseSuite();
     AstNode* parseIfStmt();
     AstNode* parseWhileStmt();
+    AstNode* parseForStmt();
     AstNode* parseBreakStmt();
     AstNode* parseContinueStmt();
     AstNode* parsePassStmt();

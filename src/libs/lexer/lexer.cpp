@@ -33,6 +33,8 @@ Lexer::Lexer(const std::string& source)
         {"pass", TokenType::Pass},
         {"class", TokenType::Class},
         {"import", TokenType::Import},
+        {"for", TokenType::For},
+        {"in", TokenType::In},
     };
 }
 
@@ -209,6 +211,7 @@ void Lexer::handleIdentifier() {
         case TokenType::Elif:
         case TokenType::Else:
         case TokenType::While:
+        case TokenType::For:
         case TokenType::Def: 
         case TokenType::Class: { 
             isBlock = true; 

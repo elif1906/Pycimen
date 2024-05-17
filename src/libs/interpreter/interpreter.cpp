@@ -181,6 +181,32 @@ PyCimenObject* Interpreter::visitWhileNode(WhileNode* node){
     }
     return new PyCimenNone();
 }
+PyCimenObject* Interpreter::visitForNode(ForNode* node) {
+    
+    std::string varName = static_cast<NameNode*>(node->target)->getLexeme();
+
+    PyCimenObject* iterable = node->iterable->accept(this);
+
+    if (iterable->isList()) {
+        PyCimenList* iterableList = static_cast<PyCimenList*>(iterable);
+        const std::vector<PyCimenObject*>& values = iterableList->getList();
+        for (PyCimenObject* obj : values) {
+            
+            this->defineOnContext(varName, obj);
+            
+            node->body->accept(this);
+        }
+    } else {
+        throw std::runtime_error("Unsupported iterable type");
+    }
+
+    
+    if (node->elseBranch != nullptr) {
+        node->elseBranch->accept(this);
+    }
+
+    return new PyCimenNone();
+}
 
 PyCimenObject* Interpreter::visitBreakNode(BreakNode* node) {
     throw BreakException();

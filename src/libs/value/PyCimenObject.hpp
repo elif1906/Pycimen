@@ -26,6 +26,7 @@ public:
         deleteData();
     }
     
+    virtual std::string toString() const {return ""; }
     virtual inline bool isInt() const { return false; }
     virtual inline bool isFloat() const { return false; }
     virtual inline bool isStr() const { return false; }

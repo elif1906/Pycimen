@@ -1,0 +1,8 @@
+Array Set:
+[3, 7, 2, 1, 8]
+Mean of Array:
+4.2
+Median of Array:
+3.0
+Standart deviation of Array:
+3.11448

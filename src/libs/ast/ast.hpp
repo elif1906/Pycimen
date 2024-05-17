@@ -25,7 +25,7 @@ enum class AstNodeType {
     If, Function, Return,
     Class, AttrRef,
     Pass,
-    Import,
+    Import,For,
 
     // Expressions
     UnaryOp, BinaryOp, TernaryOp,
@@ -300,6 +300,23 @@ public:
     virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
 
+class ForNode : public AstNode {
+public:
+    ForNode(AstNode* target, AstNode* iterable, AstNode* body, AstNode* elseBranch)
+      : AstNode(AstNodeType::For) {
+        this->target = target;
+        this->iterable = iterable;
+        this->body = body;
+        this->elseBranch = elseBranch;
+      }
+
+    AstNode* target;
+    AstNode* iterable; 
+    AstNode* body;
+    AstNode* elseBranch;
+    
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
+};
 
 class BreakNode : public AstNode {
 
@@ -436,6 +453,7 @@ public:
     virtual PyCimenObject* visitBlockNode(BlockNode* node) = 0;
     virtual PyCimenObject* visitPrintNode(PrintNode* node) = 0;
     virtual PyCimenObject* visitWhileNode(WhileNode* node) = 0;
+    virtual PyCimenObject* visitForNode(ForNode* node) = 0;
     virtual PyCimenObject* visitBreakNode(BreakNode* node) = 0;
     virtual PyCimenObject* visitContinueNode(ContinueNode* node) = 0;
     virtual PyCimenObject* visitPassNode(PassNode* node) = 0;
@@ -456,4 +474,5 @@ public:
     virtual PyCimenObject* visitClassNode(ClassNode* node) = 0;
     virtual PyCimenObject* visitPropertyNode(PropertyNode* node) = 0;
     virtual PyCimenObject* visitListNode(ListNode* node) = 0;
+    
 };
