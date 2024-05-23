@@ -179,3 +179,10 @@ const ll* PyCimenInt::getIntData() const {
 void PyCimenInt::deleteData() {
     delete getIntData();
 }
+
+
+PyObject* PyCimenInt::getPythonObject() const {
+    PyObject* object = PyLong_FromLongLong(this->getInt());
+    Py_INCREF(object);
+    return object;
+}

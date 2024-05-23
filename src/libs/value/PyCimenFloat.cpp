@@ -119,3 +119,9 @@ const llf* PyCimenFloat::getFloatData() const {
 void PyCimenFloat::deleteData() {
     delete getFloatData();
 }
+
+PyObject* PyCimenFloat::getPythonObject() const {
+    PyObject* object = PyFloat_FromDouble((long double)this->getFloat());
+    Py_INCREF(object);
+    return object;
+}

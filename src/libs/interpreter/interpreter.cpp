@@ -69,7 +69,10 @@ PyCimenObject* Interpreter::visitPrintNode(PrintNode* node) {
 PyCimenObject* Interpreter::visitImportNode(ImportNode* node) {
     char* moduleName = node->getModuleName().data();
 
-    PyCimenObject* value = new PyCimenModule(moduleName);
+    PyCimenModule* module = new PyCimenModule(moduleName);
+
+    PyCimenObject* value = module;
+
     defineOnContext(node->getModuleName(), value);
 
     GC.pushObject(value);
@@ -146,12 +149,20 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
         return context->get(name);
 
     } else if (object->isModule()) {
+
         PyCimenModule* module = static_cast<PyCimenModule*>(object);
 
-        PyCimenScope* context = module->getContext();
-        PyCimenObject* value = context->get(name);
+        PyCimenObject* attr = module->getAttr(name.c_str());
 
-        return value;
+        return attr;
+
+    } else if (object->isModuleAttr()) {
+
+        PyCimenModuleAttr* attr = static_cast<PyCimenModuleAttr*>(object);
+
+        PyCimenObject* new_attr = attr->getAttr(name.c_str());
+
+        return new_attr;
     }
     
     return new PyCimenNone();
@@ -338,7 +349,7 @@ PyCimenObject* Interpreter::visitBinaryOpNode(BinaryOpNode* node)  {
             GC.pushObject(value); 
             break;
         case TokenType::Or:
-            /*
+            /*inter
              *  try to do short-circuit: if after evaluating the left operand, 
              *  the result of the logical expression is known, 
              *  do not evaluate the right operand

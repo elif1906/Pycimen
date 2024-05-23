@@ -22,6 +22,8 @@ public:
     
     llf getFloat() const;
     void write(std::ostream& out) const override;
+
+    PyObject* getPythonObject() const override;
         
 private:
     const llf* getFloatData() const;

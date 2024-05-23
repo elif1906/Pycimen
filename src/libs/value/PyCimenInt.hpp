@@ -29,6 +29,8 @@ public:
     
     ll getInt() const;
     void write(std::ostream& out) const override;
+
+    PyObject* getPythonObject() const override;
     
 private:
     const ll* getIntData() const;

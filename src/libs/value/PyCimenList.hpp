@@ -59,7 +59,25 @@ public:
         }
         out << ']';
     }
-    
+
+    PyObject* getPythonObject() const override {
+        PyObject* pythonList = PyList_New(0);
+        auto list = this->getList();
+        for (int i = 0; i < this->size(); i++) {
+            PyObject* pythonObject = list[i]->getPythonObject();
+            std::cout << "Appending python object: " << pythonObject << std::endl;
+            int res = PyList_Append(pythonList, pythonObject);
+            if (res == -1) {
+                PyErr_Print();
+                Py_DECREF(pythonObject);
+                Py_DECREF(pythonList);
+                return nullptr;
+            }
+            Py_DECREF(pythonObject);
+        }
+        return pythonList;
+    }    
+
 private:
     std::vector<PyCimenObject*>* getListData() const {
         return static_cast<std::vector<PyCimenObject*>*>(data);

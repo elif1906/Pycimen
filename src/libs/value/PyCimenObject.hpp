@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <iostream>
 
+#include <Python.h>
+
 using ll = long long int;
 using llf = long double;
 
@@ -16,8 +18,7 @@ public:
         List, Func, 
         Klass, Instance,
         Builtin,
-        Module, ModuleFunc,
-        NumpyArray,
+        Module, ModuleAttr,
     };
     PyCimenObject(ObjectType type, void* data = nullptr) 
         : type(type), data(data) {}
@@ -38,8 +39,11 @@ public:
     virtual inline bool isNone() const { return false; }
     virtual inline bool isCallable() const { return false; }
     virtual inline bool isModule() const { return false; }
+    virtual inline bool isModuleAttr() const { return false; }
     virtual inline bool isModuleFunc() const { return false; }
     virtual inline bool isNumpyArray() const { return false; }
+
+    virtual PyObject* getPythonObject() const { return nullptr; }
 
     virtual inline bool isTruthy() const { 
         throw std::runtime_error("Yet not evaluatable object.");
