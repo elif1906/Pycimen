@@ -65,7 +65,6 @@ public:
         auto list = this->getList();
         for (int i = 0; i < this->size(); i++) {
             PyObject* pythonObject = list[i]->getPythonObject();
-            std::cout << "Appending python object: " << pythonObject << std::endl;
             int res = PyList_Append(pythonList, pythonObject);
             if (res == -1) {
                 PyErr_Print();

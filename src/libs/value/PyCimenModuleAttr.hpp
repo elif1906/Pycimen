@@ -2,7 +2,6 @@ PyCimenObject* parsePythonObject(PyObject* pythonObject) {
     if (PyFloat_Check(pythonObject)) {
         return new PyCimenFloat((llf)PyFloat_AsDouble(pythonObject));
     } else if (strstr(pythonObject->ob_type->tp_name, "numpy.ndarray")) {
-        std::cout << "toListMethod" << std::endl; 
         PyObject* list = PyObject_CallMethod(pythonObject, "tolist", nullptr);
         return parsePythonObject(list);
     } else if (PyList_Check(pythonObject)) {
@@ -50,12 +49,9 @@ public:
 
         const char* typeName = pythonObject->ob_type->tp_name; 
 
-        if(strstr(typeName, "function") 
-                || strstr(typeName, "type") 
-                || strstr(typeName, "method")) {
+        if(PyCallable_Check(pythonObject)) {
             this->attrType = AttrType::Function; 
         } else {
-            std::cout << "This is a " << typeName << std::endl;
             this->attrType = AttrType::Unknown; 
         }
     }
@@ -63,7 +59,6 @@ public:
     PyCimenObject* getAttr(const char* name) const {
         PyObject* attr = PyObject_GetAttrString(this->pythonObject, name);
 
-        std::cout << "Got attr " << name << ": " << attr << std::endl;
         return new PyCimenModuleAttr(attr);
     }
 
@@ -83,9 +78,6 @@ public:
             
             /* PyObject* result = PyObject_CallFunctionObjArgs(this->pythonObject, args[0]->getPythonObject()); */
             PyObject* result = PyObject_CallObject(this->pythonObject, argsTuple);
-
-            std::cout << "Result: " << result << std::endl;
-            std::cout << "Result type: " << result->ob_type->tp_name << std::endl;
 
             if (result == nullptr) {
                 PyErr_Print();

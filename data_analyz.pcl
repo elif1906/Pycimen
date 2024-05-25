@@ -1,0 +1,22 @@
+import numpy  
+import pandas 
+
+data = [60, 58, 42, 55] 
+
+df = pandas.DataFrame(data)
+
+
+print("İlk 5 satır:")
+print(df.head())
+
+
+print("Temel istatistikler:")
+print(df.describe())
+
+
+print("Sütun ortalamaları:")
+print(df.mean())
+
+
+print("Sütun standart sapmaları:")
+print(df.std())

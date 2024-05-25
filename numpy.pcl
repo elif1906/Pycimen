@@ -4,7 +4,7 @@ a = numpy.array([10, 11, 12, 13])
 
 print(a)
 
-b = numpy.mean(a)
+b = a.mean()
 
 print(b)
 

@@ -1,17 +1,9 @@
 import numpy
 
-a = numpy.array([3,7,2,1,8])
+a = numpy.array([10, 11, 12, 13])
 
-b = numpy.mean(a)
+print(a)
 
-c = numpy.median(a)
+b = a.mean()
 
-d = numpy.std(a)
-print("Array Set:")
-print (a)
-print("Mean of Array:")
 print(b)
-print("Median of Array:")
-print(c)
-print("Standart deviation of Array:")
-print(d)
