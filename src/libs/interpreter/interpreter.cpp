@@ -123,10 +123,26 @@ PyCimenObject* Interpreter::visitClassNode(ClassNode* node) {
 }
 
 PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
+
+    PropertyNode* node_property = node;
     
-    PyCimenObject* object = node->object->accept(this);
-    NameNode* attr = static_cast<NameNode*>(node->attribute);
+    PyCimenObject* object = node_property->object->accept(this);
+    NameNode* attr = dynamic_cast<NameNode*>(node_property->attribute);
+    
+   
+    
+    while (attr == nullptr) {
+        node_property = dynamic_cast<PropertyNode*>(node_property->attribute);
+
+        std::cout << "Node Prop after iter: " << node_property << std::endl;
+
+        object = node_property->object->accept(this);
+        attr = dynamic_cast<NameNode*>(node_property->attribute);
+
+    }
     const std::string& name = attr->getLexeme();
+
+   
     
     if(object->isInstance()) {
     

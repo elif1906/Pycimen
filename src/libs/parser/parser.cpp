@@ -595,7 +595,14 @@ AstNode* Parser::parsePrimary() {
             left = parseCall(left);
         
         } else if(match(TokenType::Dot)) {
-            AstNode* right = new NameNode(consume(TokenType::Name));
+            AstNode* right;
+
+            if (peek().type == TokenType::Dot) {
+                right = parsePrimary();
+            } else {
+                right = new NameNode(consume(TokenType::Name));
+            }
+
             left = new PropertyNode(left, right);
         
         } else {

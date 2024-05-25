@@ -1,5 +1,9 @@
 import numpy
 
-a = numpy.ones(5)
+a = numpy.random.randn(100, 4)
 
 print(a)
+
+b= a.mean()
+
+print(b)

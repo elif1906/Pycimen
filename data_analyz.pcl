@@ -1,6 +1,7 @@
 import numpy  
 import pandas 
 
+
 data = [60, 58, 42, 55] 
 
 df = pandas.DataFrame(data)
