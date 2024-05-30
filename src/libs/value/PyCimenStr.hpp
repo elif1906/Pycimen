@@ -33,6 +33,11 @@ public:
     void write(std::ostream& out) const override {
         out << "\'" << getStr() << "\'";
     }
+
+    PyObject* getPythonObject() const override{
+        auto str = this->getStr();
+        return  PyUnicode_FromStringAndSize(str.c_str(), str.length()); 
+    }
     
 private:
     const std::string* getStrData() const {

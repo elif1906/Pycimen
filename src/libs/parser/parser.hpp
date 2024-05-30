@@ -19,6 +19,7 @@ private:
     std::vector<AstNode*> parseStmtList();
     AstNode* parseSimpleStmt();
     AstNode* parsePrintStmt();
+    AstNode* parseRangeStmt();
     AstNode* parseSuite();
     AstNode* parseIfStmt();
     AstNode* parseWhileStmt();

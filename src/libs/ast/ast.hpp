@@ -21,7 +21,8 @@ enum class AstNodeType {
     Block,
     
     // Statements
-    Print, While, Break, Continue,
+    Print, Range
+    ,While, Break, Continue,
     If, Function, Return,
     Class, AttrRef,
     Pass,
@@ -92,6 +93,20 @@ public:
 
     virtual PyCimenObject* accept(NodeVisitor* visitor) override;
 };
+
+
+class RangeNode : public AstNode {
+public:
+    RangeNode(AstNode* start, AstNode* end)
+        : AstNode(AstNodeType::Range), start(start), end(end) {}
+
+    AstNode* start;
+    AstNode* end;
+
+    virtual PyCimenObject* accept(NodeVisitor* visitor) override;
+};
+
+
 
 
 class BlockNode : public AstNode {
@@ -424,7 +439,6 @@ public:
     
     AstNode *object, *attribute;
 };
-
 
 class IfNode : public AstNode {
 

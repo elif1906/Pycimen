@@ -35,6 +35,7 @@ Lexer::Lexer(const std::string& source)
         {"import", TokenType::Import},
         {"for", TokenType::For},
         {"in", TokenType::In},
+        {"range", TokenType::Range},
     };
 }
 

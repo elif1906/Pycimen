@@ -98,6 +98,10 @@ public:
         out << PyUnicode_AsUTF8(representation);
     }
 
+    PyObject* getPythonObject() const override {
+        return this->pythonObject;
+    }
+
 private: 
     PyObject* pythonObject;
     AttrType attrType;

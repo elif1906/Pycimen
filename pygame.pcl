@@ -1,0 +1,12 @@
+import pygame
+import sys
+
+pygame.init()
+
+pygame.display.set_mode()
+
+pygame.display.set_caption("Basit Pygame Penceresi")
+
+
+while True:
+    pygame.display.flip()

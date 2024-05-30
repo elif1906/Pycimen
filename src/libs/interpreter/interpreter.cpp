@@ -130,8 +130,8 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
     NameNode* attr = dynamic_cast<NameNode*>(node_property->attribute);
     
    
-    
-    while (attr == nullptr) {
+    if (!object->isList()) {
+        while (attr == nullptr) {
         node_property = dynamic_cast<PropertyNode*>(node_property->attribute);
 
         std::cout << "Node Prop after iter: " << node_property << std::endl;
@@ -140,7 +140,12 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
         attr = dynamic_cast<NameNode*>(node_property->attribute);
 
     }
-    const std::string& name = attr->getLexeme();
+    }
+
+    std::string name = std::string("");
+    if (attr) {
+        name = attr->getLexeme();
+    }
 
    
     
@@ -179,6 +184,27 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
         PyCimenObject* new_attr = attr->getAttr(name.c_str());
 
         return new_attr;
+    } else if (object->isList()) {
+
+        PyCimenList* list = dynamic_cast<PyCimenList*>(object);
+
+        // size attribute
+        if(attr && strstr(name.data(), "size")) {
+            return new PyCimenInt(list->size());
+        }
+
+
+
+        // index access
+
+        auto index = dynamic_cast<IntNode*>(node->attribute);
+
+        if(index) {
+            auto indexVal = stoi(index->getLexeme());
+            return list->getList()[indexVal];
+        }
+
+        return new PyCimenNone();
     }
     
     return new PyCimenNone();
@@ -525,6 +551,16 @@ PyCimenObject* Interpreter::visitCallNode(CallNode* expr) {
         arguments.push_back(argumentNode->accept(this));
     }
     return (*callable).call(this, arguments);
+}
+
+
+PyCimenObject* Interpreter::visitRangeNode(RangeNode* rangeNode) {
+    PyCimenObject* start = rangeNode->start->accept(this);
+    PyCimenObject* end = rangeNode->end->accept(this);
+
+    
+
+    return new PyCimenList();
 }
 
 

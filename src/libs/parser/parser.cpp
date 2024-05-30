@@ -146,8 +146,10 @@ AstNode* Parser::parseSimpleStmt() {
      *                   | global_stmt     TODO
      *
     */
-     if (match(TokenType::Print)) {
+    if (match(TokenType::Print)) {
         return parsePrintStmt();
+    } else if (match(TokenType::Range)) {
+        return parseRangeStmt();  
     } else if(match(TokenType::Return)){
         return parseReturnStmt();
     } else if(match(TokenType::Break)){
@@ -214,6 +216,23 @@ AstNode* Parser::parsePrintStmt() {
     } consume(TokenType::RightParen);
 
     return new PrintNode(expr);
+}
+
+AstNode* Parser::parseRangeStmt() {
+    /*
+     *    print_stmt ::= "range" "(" (expression)? ")"
+    */
+    consume(TokenType::LeftParen);
+    
+    AstNode* begin = parseExpr();
+
+    consume(TokenType::Comma);
+
+    AstNode* end = parseExpr();
+
+    consume(TokenType::RightParen);
+
+    return new RangeNode(begin, end);
 }
 
 AstNode* Parser::parseImportStmt() {
@@ -605,7 +624,13 @@ AstNode* Parser::parsePrimary() {
 
             left = new PropertyNode(left, right);
         
-        } else {
+        }  else if (match(TokenType::LeftBracket)) {
+            AstNode* index = parseExpr();
+            consume(TokenType::RightBracket);
+            return new PropertyNode(left, static_cast<IntNode*>(index));
+        }
+
+        else {
             break;
         }
     }

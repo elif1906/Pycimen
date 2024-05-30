@@ -2,22 +2,21 @@ import numpy
 import pandas 
 
 
-data = [60, 58, 42, 55] 
+data = numpy.random.randn(6, 4)
+
+print(data)
 
 df = pandas.DataFrame(data)
 
 
-print("İlk 5 satır:")
+print("First 5 rows:")
 print(df.head())
 
-
-print("Temel istatistikler:")
+print("Basic statistics:")
 print(df.describe())
 
-
-print("Sütun ortalamaları:")
+print("Column means:")
 print(df.mean())
 
-
-print("Sütun standart sapmaları:")
+print("Column standard deviations:")
 print(df.std())

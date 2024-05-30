@@ -265,6 +265,18 @@ PyCimenObject* ClassNode::accept(NodeVisitor* visitor) {
     return value;
 }
 
+
+PyCimenObject* RangeNode::accept(NodeVisitor* visitor) {
+    #ifdef DEBUG
+        std::cout << "visiting " << "RangeNode" << "\n";
+    #endif
+    PyCimenObject* value = visitor->visitRangeNode(this);
+    #ifdef DEBUG
+        std::cout << "exiting " << "RangeNode" << "\n";
+    #endif
+    return value;
+}
+
 PyCimenObject* PropertyNode::accept(NodeVisitor* visitor) {
     #ifdef DEBUG
         std::cout << "visiting " << "PropertyNode" << "\n";

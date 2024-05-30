@@ -1,0 +1,13 @@
+import cv2
+import numpy
+
+img_path = "picture.jpeg"
+img = cv2.imread("picture.jpeg")
+print(img.shape)
+
+
+gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+print(gray_image.shape)
+cv2.imshow("gray", gray_image)
+cv2.waitKey(0)

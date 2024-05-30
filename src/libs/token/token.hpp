@@ -104,6 +104,8 @@ public:
                 out << "None"; break;
             case TokenType::Print:
                 out << "Print"; break;
+            case TokenType::Range:
+                out << "Range"; break;
             case TokenType::Class:
                 out << "Class"; break;
             case TokenType::Def:

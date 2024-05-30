@@ -16,6 +16,7 @@ public:
     virtual PyCimenObject* visitImportNode(ImportNode* node) override;
     virtual PyCimenObject* visitBlockNode(BlockNode* node) override;
     virtual PyCimenObject* visitPrintNode(PrintNode* node) override;
+    virtual PyCimenObject* visitRangeNode(RangeNode* node) override;
     virtual PyCimenObject* visitWhileNode(WhileNode* node) override;
     virtual PyCimenObject* visitForNode(ForNode* node) override;
     virtual PyCimenObject* visitBreakNode(BreakNode* node) override;
