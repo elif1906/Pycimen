@@ -29,6 +29,10 @@ public:
         return *getListData();
     }
 
+    void setList(std::vector<PyCimenObject*> list) {
+        this->data = new std::vector<PyCimenObject*>(list);
+    }
+
     const PyCimenObject* operator[](size_t index) const {
         const auto& listData = getList();
         if (index < listData.size()) {

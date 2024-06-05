@@ -1,10 +1,3 @@
-class Araba:
-    def __init__(self, marka, model):
-        self.marka = marka
-        self.model = model
+a = [1, 2, 3, 4]
 
-    def bilgileri_goster(self):
-        print("Marka: " + self.marka + ", Model: " + self.model)
-
-araba1 = Araba("Toyota", "Corolla")
-araba1.bilgileri_goster()  # Output: Marka: Toyota, Model: Corolla
+print(a)

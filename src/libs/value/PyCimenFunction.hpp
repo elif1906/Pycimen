@@ -22,7 +22,7 @@ public:
     }
     
     PyCimenObject* call(Interpreter* interpreter, const std::vector<PyCimenObject*>& args) override {
-        
+
         closure = this->getContext();
         fnCallEnv = new class PyCimenScope(closure);
         interpreter->pushContext(fnCallEnv);

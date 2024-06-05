@@ -2,7 +2,7 @@ import numpy
 import pandas 
 
 
-data = numpy.random.randn(6, 4)
+data = numpy.random.randn(100, 1)
 
 print(data)
 

@@ -1,0 +1,27 @@
+def insertionSort(array):
+
+    shortest = 0
+
+    for i in range(0, array.size):
+
+        smallest = i;
+
+        for j in range(i + 1, array.size):
+
+            if array[j] < smallest:
+                smallest = j
+
+        temp = array[i]
+        array[i] = array[smallest]
+        array[smallest] = temp
+
+    print("new array:")
+    print(array)
+
+
+
+
+data = [9, 5, 1, 4, 3]
+insertionSort(data)
+print('Sorted Array in Ascending Order:')
+print(data)

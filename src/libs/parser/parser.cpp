@@ -220,8 +220,9 @@ AstNode* Parser::parsePrintStmt() {
 
 AstNode* Parser::parseRangeStmt() {
     /*
-     *    print_stmt ::= "range" "(" (expression)? ")"
+     *    rangeStmt ::= "range" "(" "begin" "," "end" ")"
     */
+
     consume(TokenType::LeftParen);
     
     AstNode* begin = parseExpr();
@@ -627,7 +628,7 @@ AstNode* Parser::parsePrimary() {
         }  else if (match(TokenType::LeftBracket)) {
             AstNode* index = parseExpr();
             consume(TokenType::RightBracket);
-            return new PropertyNode(left, static_cast<IntNode*>(index));
+            return new PropertyNode(left, index);
         }
 
         else {
@@ -657,7 +658,8 @@ AstNode* Parser::parseAtom() {
                     if (match(TokenType::RightBracket)) {
                         break;
                     }
-                    list->append(parseAtom());
+                    auto object = parseAtom();
+                    list->append(object);
                     if (!match(TokenType::Comma)) {
                         break;
                     }
@@ -679,6 +681,9 @@ AstNode* Parser::parseAtom() {
                 return new StringNode(tk);
             case TokenType::Name: {
                 return new NameNode(tk);
+            }
+            case TokenType::Range: {
+                return parseRangeStmt();
             }
             default: {
                 error("Expected a primary expression");

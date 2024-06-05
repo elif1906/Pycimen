@@ -85,7 +85,9 @@ public:
         throw std::runtime_error("Unsupported operands for <.");
     }
     virtual PyCimenObject* operator>(const PyCimenObject& other) const {
+        std::cout << other << std::endl;
         throw std::runtime_error("Unsupported operands for >.");
+
     }
     virtual PyCimenObject* operator-() const {
         throw std::runtime_error("Unsupported operands for unary -.");

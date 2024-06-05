@@ -141,6 +141,7 @@ PyCimenObject* PyCimenInt::operator<(const PyCimenObject& other) const {
 }
 
 PyCimenObject* PyCimenInt::operator>(const PyCimenObject& other) const {
+
     if (other.isInt()) {
         const PyCimenInt* rhs = dynamic_cast<const PyCimenInt*>(&other);
         return new PyCimenBool(getInt() > rhs->getInt());

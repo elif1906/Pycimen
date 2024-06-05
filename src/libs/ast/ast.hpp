@@ -71,6 +71,10 @@ public:
     values.push_back(value);
   }
 
+  int size() {
+      return values.size();
+  }
+
   std::vector<AstNode*> get_values() {
     return values;
   }
@@ -466,6 +470,7 @@ public:
     virtual PyCimenObject* visitProgramNode(ProgramNode* node) = 0;
     virtual PyCimenObject* visitBlockNode(BlockNode* node) = 0;
     virtual PyCimenObject* visitPrintNode(PrintNode* node) = 0;
+    virtual PyCimenObject* visitRangeNode(RangeNode* node) = 0;
     virtual PyCimenObject* visitWhileNode(WhileNode* node) = 0;
     virtual PyCimenObject* visitForNode(ForNode* node) = 0;
     virtual PyCimenObject* visitBreakNode(BreakNode* node) = 0;
