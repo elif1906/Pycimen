@@ -1,9 +1,5 @@
 def partition(array, low, high):
 
-    print("ol artık allah cezanı vermesin")
-    print(low)
-    print(high)
-
     pivot = array[high]
  
     i = low - 1
@@ -27,8 +23,6 @@ def partition(array, low, high):
     return i + 1
 
 def quickSort(array, low, high):
-
-    print("Neden")
 
     if low < high:
 

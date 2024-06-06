@@ -10,8 +10,8 @@ void GarbageCollector::freeUnused() {
             std::vector<PyCimenObject*>::iterator position = std::find(objects.begin(), objects.end(), object);
                     
             if(position != objects.end()){
-                //objects.erase(position);
-                //delete object;
+                objects.erase(position);
+                delete object;
             }
         }
     }

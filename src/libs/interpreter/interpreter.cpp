@@ -124,21 +124,11 @@ PyCimenObject* Interpreter::visitClassNode(ClassNode* node) {
 
 PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
     
-    std::cout << "property access" << std::endl;
-
     PropertyNode* node_property = node;
     
-    std::cout << "property access object anan" << node_property->object << std::endl;
     PyCimenObject* object = node_property->object->accept(this);
 
-    std::cout << "property access object anan is list" << object->isList()<< std::endl;
-    
     NameNode* attr = dynamic_cast<NameNode*>(node_property->attribute);
-
-    std::cout << "property access object" << object << std::endl;
-    std::cout << "property access attr" << attr << std::endl;
-    std::cout << "property access 2" << std::endl;
-    
    
     if (!object->isList()) {
         while (attr == nullptr) {
@@ -192,8 +182,6 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
         return new_attr;
     } else if (object->isList()) {
 
-        std::cout << "list access" << std::endl;
-
         PyCimenList* list = dynamic_cast<PyCimenList*>(object);
 
         // size attribute
@@ -202,8 +190,6 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
         }
 
         // index access
-
-        std::cout << "index access" << std::endl;
 
         auto indexObject = node->attribute->accept(this);
 
@@ -227,8 +213,6 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
             if (indexVal >= list->size()) {
                 throw std::runtime_error("index out of array bound");
             }
-
-            std::cout << "returning: " << *list->getList()[indexVal] << std::endl;
 
             return list->getList()[indexVal];
 
@@ -275,9 +259,6 @@ PyCimenObject* Interpreter::visitForNode(ForNode* node) {
         const std::vector<PyCimenObject*>& values = iterableList->getList();
         for (PyCimenObject* obj : values) {
 
-            std::cout << "Iteraing object ptr: " << obj << std::endl;
-            std::cout << "Iteraing object: " << *obj << std::endl;
-            
             this->defineOnContext(varName, obj);
             
             node->body->accept(this);
@@ -312,11 +293,10 @@ PyCimenObject* Interpreter::visitListNode(ListNode* node) {
     std::vector<PyCimenObject*> values;
     for (auto& valueNode : node->get_values()) {
         auto object = valueNode->accept(this);
+        object->incRefCount();
         values.push_back(object);
-        std::cout << *object << " " << std::flush;
     }
 
-    std::cout << std::endl;
     return new PyCimenList(values);
 }
 
@@ -596,11 +576,7 @@ PyCimenObject* Interpreter::visitAssignNode(AssignNode* node) {
 
 PyCimenObject* Interpreter::visitNameNode(NameNode* node){
     const std::string& varname = node->getLexeme();
-    auto object = getFromContext(varname);
-    std::cout << "variable: " << varname << std::endl;
-    std::cout << "got from context as ptr" << object << std::endl;
-    std::cout << "is list: " << object->isList() << std::endl;
-    return object;
+    return getFromContext(varname);;
 }
 
 PyCimenObject* Interpreter::visitBooleanNode(BooleanNode* node){
