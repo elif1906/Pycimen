@@ -28,6 +28,43 @@ PyCimenObject* parsePythonObject(PyObject* pythonObject) {
 class PyCimenModuleAttr : public PyCimenCallable {
 public:
 
+    PyCimenObject* operator+(const PyCimenObject& other) const override {
+        return *parsePythonObject(this->pythonObject) + other;
+    }
+
+    PyCimenObject* operator-(const PyCimenObject& other) const override {
+        return *parsePythonObject(this->pythonObject) - other;
+    }
+
+    PyCimenObject* operator*(const PyCimenObject& other) const override {
+        return *parsePythonObject(this->pythonObject) * other;
+
+    }
+
+    PyCimenObject* operator/(const PyCimenObject& other) const override {
+        return *parsePythonObject(this->pythonObject) / other;
+    }
+
+    PyCimenObject* operator==(const PyCimenObject& other) const override {
+        return *parsePythonObject(this->pythonObject) == other;
+    }
+
+    PyCimenObject* operator<(const PyCimenObject& other) const override {
+        return *parsePythonObject(this->pythonObject) < other;
+    }
+
+    PyCimenObject* operator>(const PyCimenObject& other) const override {
+        return *parsePythonObject(this->pythonObject) > other;
+    }
+
+    PyCimenObject* operator-() const override {
+        return -(*parsePythonObject(this->pythonObject));
+    }
+
+    PyCimenObject* operator!() const override {
+        return !(*parsePythonObject(this->pythonObject));
+    }
+
     enum class AttrType {
         Function,
         Unknown
