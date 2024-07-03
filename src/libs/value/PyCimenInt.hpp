@@ -14,6 +14,7 @@ public:
     PyCimenObject* operator-(const PyCimenObject& other) const override;
     PyCimenObject* operator*(const PyCimenObject& other) const override;
     PyCimenObject* operator/(const PyCimenObject& other) const override;
+    PyCimenObject* __intdiv__(const PyCimenObject& other) const override;
     PyCimenObject* operator%(const PyCimenObject& other) const override;
     PyCimenObject* operator&(const PyCimenObject& other) const override;
     PyCimenObject* operator|(const PyCimenObject& other) const override;

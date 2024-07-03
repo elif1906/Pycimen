@@ -1,60 +1,72 @@
+import time
+import numpy
 
 def heapify(arr, n, i):
-	largest = i # Initialize largest as root
-	l = 2 * i + 1 # left = 2*i + 1
-	r = 2 * i + 2 # right = 2*i + 2
 
+    largest = i
+    l = 2 * i + 1
+    r = 2 * i + 2
 
+    if l < n:
+        if arr[i] < arr[l]:
+            largest = l
 
-	if l < n and arr[i] < arr[l]:
-		largest = l
+    if r < n:
+        if arr[largest] < arr[r]:
+            largest = r
 
+    if largest != i:
+        temp = arr[i] 
+        arr[i] = arr[largest] 
+        arr[largest]  = temp 
 
-
-	if r < n and arr[largest] < arr[r]:
-		largest = r
-
-
-
-	if largest != i:
-
-      temp = arr[i] 
-      arr[i]  = arr[largest] 
-      arr[largest]  = temp 
-
-		
-
-
-
-	heapify(arr, n, largest)
-
-
-
+        heapify(arr, n, largest)
 
 def heapSort(arr):
-	n = len(arr)
 
+    n = arr.size
 
+    num = n // 2
+
+    nums = []
+
+    while num > -1:
+        nums.append(num)
+        num -= 1
     
-	for i in range(n /= 2, -1, -1):
-		heapify(arr, n, i)
+    for i in nums:
+        heapify(arr, n, i)
+
+    num = n - 1
+    nums = []
+
+    while num > 0:
+        nums.append(num)
+        num -= 1
 
 
+    for i in nums:
 
-	for i in range(n - 1, 0, -1):
-            
         temp = arr[i] 
         arr[i]  = arr[0]
         arr[0]  = temp 
 		
-	heapify(arr, i, 0)
+        heapify(arr, i, 0)
 
 
 
 
-arr = [12, 11, 13, 5, 6, 7, ]
+arr = [12, 11, 13, 5, 6, 7]
+
+start = time.time()
 heapSort(arr)
-n = len(arr)
-print('Sorted array is')
-for i in range(n):
-	print(arr[i])
+end = time.time()
+
+n = arr.size
+print("Sorted array is")
+
+for i in arr:
+    print(i)
+
+print("time elapsed:")
+print(numpy.subtract(end, start) * 100)

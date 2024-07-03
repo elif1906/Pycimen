@@ -541,11 +541,11 @@ AstNode* Parser::parseFactor() {
 
 AstNode* Parser::parseTerm() {
     /*
-     *   term ::= unary (("*" | "/" | "%") unary)*
+     *   term ::= unary (("*" | "/" | "//" | "%") unary)*
     */
     AstNode* left = parseUnary();
     
-    while (match({TokenType::Star, TokenType::Slash, TokenType::Mod})) {
+    while (match({TokenType::Star, TokenType::Slash, TokenType::DoubleSlash, TokenType::Mod})) {
         Token op = previous();
         AstNode* right = parseUnary();
         left = new BinaryOpNode(left, op, right);
@@ -654,6 +654,10 @@ AstNode* Parser::parseAtom() {
         switch(tk.type) {
             case TokenType::LeftBracket: {
                 ListNode* list = new ListNode();
+                if (peek().type == TokenType::RightBracket){
+                    consume(TokenType::RightBracket);
+                    return list;
+                }
                 while (true) {
                     if (match(TokenType::RightBracket)) {
                         break;

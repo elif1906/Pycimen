@@ -3,8 +3,6 @@
 #include "./PyCimenObject.hpp"
 #include "../ast/ast.hpp"
 
-
-
 class NodeVisitor;
 
 class PyCimenList : public PyCimenObject {
@@ -12,7 +10,9 @@ public:
     PyCimenList() : PyCimenObject(ObjectType::List, new std::vector<PyCimenObject*>()) {}
 
     explicit PyCimenList(const std::vector<PyCimenObject*>& v)
-        : PyCimenObject(ObjectType::List, new std::vector<PyCimenObject*>(v)) {}
+        : PyCimenObject(ObjectType::List, new std::vector<PyCimenObject*>(v)) {
+            auto scope = new PyCimenScope();
+        }
 
 
     PyCimenList(const std::vector<AstNode*>& nodes, NodeVisitor* visitor) 
@@ -81,6 +81,7 @@ public:
         return pythonList;
     }    
 
+
 private:
     std::vector<PyCimenObject*>* getListData() const {
         return static_cast<std::vector<PyCimenObject*>*>(data);
@@ -88,4 +89,6 @@ private:
     void deleteData() override {
         delete getListData();
     }
+
+    PyCimenScope* scope;
 };

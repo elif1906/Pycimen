@@ -7,6 +7,7 @@
 #include "../value/primitives.hpp"
 #include "../builtin/builtins.hpp"
 #include "../value/PyCimenModule.hpp"
+#include "../value/AppendMethod.hpp"
 #include <sstream>
 
 
@@ -189,6 +190,10 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
             return new PyCimenInt(list->size());
         }
 
+        if(attr && strstr(name.data(), "append")) {
+            return new AppendMethod(list);
+        }
+
         // index access
 
         auto indexObject = node->attribute->accept(this);
@@ -198,6 +203,10 @@ PyCimenObject* Interpreter::visitPropertyNode(PropertyNode* node) {
         if(index) {
             //access with int
             auto indexVal = index->getInt();
+
+            if (indexVal < 0) {
+                indexVal += list->size();
+            }
 
 
             if (indexVal >= list->size()) {
@@ -357,6 +366,10 @@ PyCimenObject* Interpreter::visitBinaryOpNode(BinaryOpNode* node)  {
             break;
         case TokenType::Slash: // TODO: replace with __truediv__ call
             value = *leftValue / *rightValue;
+            GC.pushObject(value); 
+            break;
+        case TokenType::DoubleSlash:
+            value = leftValue->__intdiv__(*rightValue);
             GC.pushObject(value); 
             break;
         case TokenType::Ampersand: // TODO: replace with __and__ call

@@ -60,6 +60,9 @@ public:
     virtual PyCimenObject* operator/(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for /.");
     }
+    virtual PyCimenObject* __intdiv__(const PyCimenObject& other) const {
+        throw std::runtime_error("Unsupported operands for //.");
+    }
     virtual PyCimenObject* operator%(const PyCimenObject& other) const {
         throw std::runtime_error("Unsupported operands for %.");
     }

@@ -60,6 +60,22 @@ PyCimenObject* PyCimenFloat::operator/(const PyCimenObject& other) const {
     }
 }
 
+PyCimenObject* PyCimenFloat::__intdiv__(const PyCimenObject& other) const {
+    if (other.isInt()) {
+        const PyCimenInt* rhs = dynamic_cast<const PyCimenInt*>(&other);
+        ll rvalue = rhs->getInt();
+        if(rvalue == 0) throw std::runtime_error("Attempted to divide by zero");
+        return new PyCimenFloat(static_cast<ll>(getFloat()) / rvalue);
+    } else if(other.isFloat()) {
+        const PyCimenFloat* rhs = dynamic_cast<const PyCimenFloat*>(&other);
+        ll rvalue = static_cast<ll>(rhs->getFloat());
+        if(rvalue == 0) throw std::runtime_error("Attempted to divide by zero");
+        return new PyCimenFloat(static_cast<ll>(getFloat()) / rvalue);
+    } else {
+        throw std::runtime_error("Unsupported operands for /.");
+    }
+}
+
 PyCimenObject* PyCimenFloat::operator==(const PyCimenObject& other) const {
     if (other.isInt()) {
         const PyCimenInt* rhs = dynamic_cast<const PyCimenInt*>(&other);
