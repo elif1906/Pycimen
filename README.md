@@ -3,7 +3,6 @@
   <h1>PyCimen Language</h1>
 </div>
 
-# Abstract
 This work explores the design and implementation of a new hybrid programming language called PyCimen, which com- bines the flexibility of Python with the performance-oriented nature of C++. This study aims to examine the core concepts of programming language design and implementation. It includes the construction of essential components such as the Lexer, Parser, and Abstract syntax tree (AST), offering Python-like syntax executed in a highly optimized and effi- cient C++ runtime. PyCimen’s minimalistic syntax enhances the ease and simplicity of the language. PyCimen provides a convenient developer experience with PyCimen-LSP fea- tures such as code completion, error checking, and syntax highlighting. It includes a package manager and an embed- ded Python interpreter, enabling direct import of Python modules installed with PIP, thus leveraging the rich Python module ecosystem. Language development requires lexical analysis, parsing, and evaluation. Consequently, this work aims to promote the design and implementation of programming lan- guages, supporting their creation by providing fundamental knowledge of language design concepts. It also demonstrates the feasibility of PyCimen combining the strengths of Python and C++ into a single integrated language. The addition of new features will make PyCimen a viable language option in various fields
 
 
